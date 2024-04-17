@@ -32,7 +32,7 @@ class Aircraft (GeomBase):
     @Part
     def left_wing(self):
         return MirroredShape(shape_in=self.right_wing,
-                             #reference_point=self.position,
+                             reference_point=self.position,
                              # Two vectors to define the mirror plane
                              vector1=self.position.Vz,
                              vector2=self.position.Vx,
@@ -43,7 +43,7 @@ class Aircraft (GeomBase):
         return Fuselage(position=translate(self.position, 'x'))
 
 
-class Wing(GeomBase):
+class Wing(LoftedSolid):
     """Basic wing geometry: a loft between root and tip airfoil"""
     w_c_root = Input(6.)  # wing root chord
     w_c_tip = Input(2.3)  # wing tip chord
@@ -82,10 +82,11 @@ class Wing(GeomBase):
                                               'z', self.position.z),
                            color="red")
 
-    @Part  # TransformedCurve is making a carbon copy of the fitted curve, which can be moved (rotated and translated) /
+    # TransformedCurve is making a carbon copy of the fitted curve, which can be moved (rotated and translated) /
     # from one position to another. /
     # In this case we want to position the fitted curve copy in the x-z plane of the wing reference system, with its /
     # TE in the origin (location) of this reference system. This requires a rotation and a few translations.
+    @Part
     def root_section_unscaled(self):
         return TransformedCurve(
             curve_in=self.airfoil_from_3D_points,
@@ -130,18 +131,15 @@ class Wing(GeomBase):
         )
 
     @Part
-    def wing_loft_surf(self):  # generate a surface
-        return LoftedSurface(
-            profiles=[self.root_section, self.tip_section],
-            mesh_deflection=0.0001
-        )
-
-    @Part
-    def wing_loft_solid(self):  # generate a solid
+    def wing_loft_solid(self):  # generate a surface
         return LoftedSolid(
             profiles=[self.root_section, self.tip_section],
             mesh_deflection=0.0001
         )
+
+    @Attribute
+    def profiles(self):
+        return [self.root_section, self.tip_section]
 
 class Fuselage(LoftedSolid):  # note the use of LoftedSolid as superclass. It means that every Fuselage instance /
     # can generated lofts. A required input for LoftedSolid is a list of profiles, thereby either /
