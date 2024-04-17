@@ -4,16 +4,16 @@ from math import pi
 
 class Engine(Base):
     #: :type: float
-    radius = Input()
+    radius = Input(2)
     #: :type: float
-    length = Input()
+    length = Input(2)
 
     @Attribute
-    def volume(self):
+    def volume(radius, length):
         """Consider engine shape as a cylinder
         :return: float
         """
-        return pi * (self.radius ** 2) * self.length + self.nacelle.volume
+        return pi * (radius ** 2) * length
 
     @Part
     def nacelle(self):

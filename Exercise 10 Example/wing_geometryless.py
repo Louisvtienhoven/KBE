@@ -14,7 +14,7 @@ from parapy.core import Base, Input, Attribute
 
 class Wing(Base):
     #: wing span
-    b = Input(1.0)
+    b = Input(5.0)
 
     #: root chord
     c_root = Input(1.0)
