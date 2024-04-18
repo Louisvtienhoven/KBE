@@ -37,19 +37,19 @@ class Aircraft (GeomBase):
 
     @Part
     def channel1(self):
-        return Channel(ch_radius= 0.2,position=translate(self.position, 'x',10, 'y',1, 'z',0.1),color="Green")
+        return Channel(ch_radius= 0.2,position=translate(self.position, 'x',5, 'y',1, 'z',0.1),color="Green")
 
     @Part
     def channel2(self):
-        return Channel(ch_radius= 0.2,position=translate(self.position, 'x',10, 'y', -1, 'z',0.1),color="Green")
+        return Channel(ch_radius= 0.2,position=translate(self.position, 'x',5, 'y', -1, 'z',0.1),color="Green")
 
     @Part
     def channel3(self):
-        return Channel(ch_radius=.1, position=translate(self.position, 'x', 10, 'y', 1, 'z', 1),color="Green")
+        return Channel(ch_radius=.1, position=translate(self.position, 'x', 5, 'y', 1, 'z', 1),color="Green")
 
     @Part
     def channel4(self):
-        return Channel(ch_radius=.1, position=translate(self.position, 'x', 10, 'y', -1, 'z', 1),color='Green')
+        return Channel(ch_radius=.1, position=translate(self.position, 'x', 5, 'y', -1, 'z', 1),color='Green')
 
 
 
