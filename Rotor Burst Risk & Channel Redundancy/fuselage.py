@@ -14,7 +14,7 @@ class Fuselage(LoftedSolid):  # note the use of LoftedSolid as superclass. It me
     fu_radius = Input(2.5)
     #: fuselage sections
     #: :type: collections.Sequence[float]
-    fu_sections = Input([10, 90, 100, 100, 100, 100, 100, 100, 100, 90, 10])
+    fu_sections = Input([10, 85, 90, 95, 100, 100, 100, 100, 90, 80, 10])
     #: fuselage length
     #: :type: float
     fu_length = Input(42.)

@@ -22,7 +22,7 @@ class Aircraft (GeomBase):
 
     @Part
     def right_wing(self):
-        return Wing(position=translate(self.position, 'x', 25, 'y', 2, 'z', 0))  # the wing is defined in a different /
+        return Wing(position=translate(self.position, 'x', 22, 'y', 2, 'z', -0.8))  # the wing is defined in a different /
         # reference system than its parent aircraft
     @Part
     def left_wing(self):
@@ -37,19 +37,19 @@ class Aircraft (GeomBase):
 
     @Part
     def channel1(self):
-        return Channel(ch_radius= 0.2,position=translate(self.position, 'x',10, 'y',1, 'z',10),color="Green")
+        return Channel(ch_radius= 0.2,position=translate(self.position, 'x',10, 'y',1, 'z',0.1),color="Green")
 
     @Part
     def channel2(self):
-        return Channel(ch_radius= 0.2,position=translate(self.position, 'x',10, 'y',1, 'z',10),color="Green")
+        return Channel(ch_radius= 0.2,position=translate(self.position, 'x',10, 'y', -1, 'z',0.1),color="Green")
 
     @Part
     def channel3(self):
-        return Channel(ch_radius=.1, position=translate(self.position, 'x', 10, 'y', 1, 'z', 10),color="Green")
+        return Channel(ch_radius=.1, position=translate(self.position, 'x', 10, 'y', 1, 'z', 1),color="Green")
 
     @Part
     def channel4(self):
-        return Channel(ch_radius=.1, position=translate(self.position, 'x', 10, 'y', 1, 'z', 10),color='Green')
+        return Channel(ch_radius=.1, position=translate(self.position, 'x', 10, 'y', -1, 'z', 1),color='Green')
 
 
 
