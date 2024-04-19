@@ -14,6 +14,8 @@ class Wing(LoftedSolid):
     w_semi_span = Input(10.)  # wing semi-span
     sweep_TE = Input(25)  # sweep angle, in degrees. Defined at the wing trailing edge (TE)
 
+
+
     @Attribute
     def pts(self):
         """ Extract airfoil coordinates from a data file and create a list of 3D points"""

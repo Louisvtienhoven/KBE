@@ -1,8 +1,7 @@
-from channel import ChannelY, ChannelZ, ChannelX
-
 from parapy.geom import *
 from parapy.core import *
 
+from channel import ChannelY, ChannelZ, ChannelX, ChannelSweep
 
 class Ewis(GeomBase):
     @Part
@@ -45,9 +44,22 @@ class Ewis(GeomBase):
     def channel10(self):
         return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 30, 'y', 1, 'z', -0.6), color='Blue')
 
+    @Part
+    def channel11(self):
+        return ChannelSweep(ch_radius=.07, position=translate(self.position, 'x', 17, 'y', 1, 'z', -0.6), color='Blue')
+
+    @Part
+    def channel12(self):
+        return MirroredShape(shape_in=self.channel11,
+                             reference_point=self.position,
+                             # Two vectors to define the mirror plane
+                             vector1=self.position.Vz,
+                             vector2=self.position.Vx,
+                             mesh_deflection=0.0001,
+                             color='Blue')
+
 
 if __name__ == '__main__':
     from parapy.gui import display
-
     obj = Ewis()
     display(obj)
