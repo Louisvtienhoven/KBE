@@ -178,8 +178,10 @@ class ChannelSweep(LoftedShell):  # note the use of LoftedSolid as superclass. I
     #: :type: float
     ch_length = Input(12)
 
-    sweep_deg = 36.
-    sweep_rad = sweep_deg * (pi / 180)
+    # sweep_deg = 36.
+    # sweep_rad = sweep_deg * (pi / 180)
+
+    sweep_rad = Input(0.6283)
 
     # #positioning
     # ch_position_x = Input(1)
