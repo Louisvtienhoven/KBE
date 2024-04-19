@@ -19,7 +19,7 @@ from utilities.ref_frame import Frame
 from math import *
 
 class EngineStage(GeomBase):
-    n_blades = Input(10)
+    n_blades = Input(4)
     hub_diameter = Input(0.2) # m
     outer_diameter = Input(2.0) # m
     hub_thickness = Input(0.2) # m
@@ -39,7 +39,7 @@ class EngineStage(GeomBase):
 
     @Part
     def stage_frame(self):
-        return Frame(position=self.position)
+        return Frame(pos=self.position)
 
     @Part
     def blades(self):
@@ -47,7 +47,10 @@ class EngineStage(GeomBase):
                    width=self.root_chord,
                    height=self.root_chord,
                    length=(self.outer_diameter - self.hub_diameter)/2,
-                   position=rotate(self.position, 'z', child.index * self.angular_separation))
+                   position=rotate(self.position,'z', child.index * self.angular_separation)
+                   )
+
+
 
 if __name__ == '__main__':
     from parapy.gui import display
