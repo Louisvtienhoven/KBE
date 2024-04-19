@@ -17,8 +17,9 @@ from parapy.geom import *
 from parapy.core import *
 from engine_nacelle import Nacelle
 from engine_shaft import EngineShaft
+from engine_pylon import Pylon
 from utilities.ref_frame import Frame
-from math import *
+
 
 class Engine(GeomBase):
     length = Input(3.0)
@@ -33,6 +34,11 @@ class Engine(GeomBase):
     @Part
     def shaft(self):
         return EngineShaft(shaft_length = self.length * 0.9)
+
+    @Part
+    def blank_pylon(self):
+        return Pylon(pass_down="length, fan_diameter")
+
 
 if __name__ == '__main__':
     from parapy.gui import display

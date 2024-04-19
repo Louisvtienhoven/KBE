@@ -47,9 +47,13 @@ class Nacelle(ThickShell):
     def srf_nacelle(self):
         return LoftedShell(profiles=[self.crv_intake, self.crv_max_diameter, self.crv_outlet])
 
-    @Part
-    def shell_nacelle(self):
-        return ThickShell(built_from=self.srf_nacelle, offset=self.thickness)
+    @Attribute
+    def built_from(self):
+        return self.srf_nacelle
+
+    @Attribute
+    def offset(self):
+        return self.thickness
 
 if __name__ == '__main__':
     from parapy.gui import display
