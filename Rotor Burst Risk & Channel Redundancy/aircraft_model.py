@@ -6,9 +6,9 @@ from parapy.core import *
 from ref_frame import Frame
 from wing import Wing
 from fuselage import Fuselage
-from channel import ChannelX, ChannelY
+from channel import ChannelX, ChannelY, ChannelZ
 
-
+from EWIS import Ewis
 
 class Aircraft (GeomBase):
     @Part
@@ -33,28 +33,12 @@ class Aircraft (GeomBase):
                              vector2=self.position.Vx,
                              mesh_deflection=0.0001,
                              transparency = 0.5)
-
-
-
     @Part
-    def channel1(self):
-        return ChannelX(ch_radius= 0.2,position=translate(self.position, 'x',5, 'y',1, 'z',0.1),color="Green")
+    def wiring_system(self):
+        return Ewis(position=translate(self.position, 'x'))
 
-    @Part
-    def channel2(self):
-        return ChannelX(ch_radius= 0.2,position=translate(self.position, 'x',5, 'y', -1, 'z',0.1),color="Green")
 
-    @Part
-    def channel3(self):
-        return ChannelX(ch_radius=.1, position=translate(self.position, 'x', 5, 'y', 1, 'z', 1),color="Green")
 
-    @Part
-    def channel4(self):
-        return ChannelX(ch_radius=.1, position=translate(self.position, 'x', 5, 'y', -1, 'z', 1),color='Green')
-
-    @Part
-    def channelY(self):
-        return ChannelY(ch_radius=.1, position=translate(self.position, 'x', 5, 'y', -1, 'z', 1),color='Green')
 
 if __name__ == '__main__':
     from parapy.gui import display

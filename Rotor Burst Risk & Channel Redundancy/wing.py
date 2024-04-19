@@ -12,7 +12,7 @@ class Wing(LoftedSolid):
     w_c_root = Input(6.)  # wing root chord
     w_c_tip = Input(2.3)  # wing tip chord
     w_semi_span = Input(10.)  # wing semi-span
-    sweep_TE = Input(20)  # sweep angle, in degrees. Defined at the wing trailing edge (TE)
+    sweep_TE = Input(25)  # sweep angle, in degrees. Defined at the wing trailing edge (TE)
 
     @Attribute
     def pts(self):
@@ -104,3 +104,23 @@ class Wing(LoftedSolid):
     @Attribute
     def profiles(self):
         return [self.root_section, self.tip_section]
+
+    @Attribute # movable spar points on root section
+    def spar_pln_locs_root(self):
+        return [self.root_section.interpolate(self.root_section, self.s_c_fraction1),
+                self.root_section.interpolate(self.root_section, self.s_c_fraction2)]
+
+    @Attribute  # movable spar points on tip section
+    def spar_pln_locs_tip(self):
+        return [self.tip_section.interpolate(self.tip_section, self.s_c_fraction1),
+                self.tip_section.interpolate(self.tip_section, self.s_c_fraction2)]
+
+    def spar(self):
+        return RuledSolid()
+
+
+if __name__ == '__main__':
+    from parapy.gui import display
+
+    obj = Wing()
+    display(obj)

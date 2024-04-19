@@ -1,0 +1,53 @@
+from channel import ChannelY, ChannelZ, ChannelX
+
+from parapy.geom import *
+from parapy.core import *
+
+
+class Ewis(GeomBase):
+    @Part
+    def channel1(self):
+        return ChannelX(ch_radius=0.2, position=translate(self.position, 'x', 5, 'y', 1, 'z', -0.6), color="Blue")
+
+    @Part
+    def channel2(self):
+        return ChannelX(ch_radius=0.2, position=translate(self.position, 'x', 5, 'y', -1, 'z', -0.6), color="Blue")
+
+    @Part
+    def channel3(self):
+        return ChannelX(ch_radius=.1, position=translate(self.position, 'x', 5, 'y', 1, 'z', 1), color="Blue")
+
+    @Part
+    def channel4(self):
+        return ChannelX(ch_radius=.1, position=translate(self.position, 'x', 5, 'y', -1, 'z', 1), color='Blue')
+
+    @Part
+    def channel5(self):
+        return ChannelY(ch_radius=.1, position=translate(self.position, 'x', 7, 'y', -1, 'z', -0.6), color='Blue')
+
+    @Part
+    def channel6(self):
+        return ChannelY(ch_radius=.1, position=translate(self.position, 'x', 30, 'y', -1, 'z', -0.6), color='Blue')
+
+    @Part
+    def channel7(self):
+        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 30, 'y', -1, 'z', -0.6), color='Blue')
+
+    @Part
+    def channel8(self):
+        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 7, 'y', 1, 'z', -0.6), color='Blue')
+
+    @Part
+    def channel9(self):
+        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 7, 'y', -1, 'z', -0.6), color='Blue')
+
+    @Part
+    def channel10(self):
+        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 30, 'y', 1, 'z', -0.6), color='Blue')
+
+
+if __name__ == '__main__':
+    from parapy.gui import display
+
+    obj = Ewis()
+    display(obj)
