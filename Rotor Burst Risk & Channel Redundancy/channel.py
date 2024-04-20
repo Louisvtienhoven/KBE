@@ -5,6 +5,7 @@ from parapy.core import *
 from math import *
 
 
+
 class ChannelX(LoftedShell):  # note the use of LoftedSolid as superclass. It means that every Fuselage instance /
     # can generated lofts. A required input for LoftedSolid is a list of profiles, thereby either /
     # an @Attribute or a @Part sequence called "profiles" must be present in the body of the class. /
@@ -124,7 +125,7 @@ class ChannelZ(LoftedShell):  # note the use of LoftedSolid as superclass. It me
     ch_sections = Input([100, 100, 100, 100, 100, 100, 100,])
     #: fuselage length
     #: :type: float
-    ch_length = Input(1.6)
+    ch_length = Input(2.)
 
 
 
@@ -182,6 +183,7 @@ class ChannelSweep(LoftedShell):  # note the use of LoftedSolid as superclass. I
     # sweep_rad = sweep_deg * (pi / 180)
 
     sweep_rad = Input(0.6283)
+    dihedral = Input(0.06)
 
     # #positioning
     # ch_position_x = Input(1)
@@ -212,7 +214,7 @@ class ChannelSweep(LoftedShell):  # note the use of LoftedSolid as superclass. I
                       radius=self.section_radius[child.index],
                       # fuselage along the X axis, nose in XOY
                       position=translate(self.position.rotate90('y'),  # circles are in XY plane, thus need rotation
-                                         Vector(sin(self.sweep_rad), tan(self.sweep_rad), 0),
+                                         Vector(sin(self.sweep_rad), tan(self.sweep_rad), self.dihedral),
                                          child.index * self.section_length)
                       )
 

@@ -22,7 +22,7 @@ class Aircraft (GeomBase):
 
     @Part
     def right_wing(self):
-        return Wing(position=translate(self.position, 'x',22, 'y', 1.5, 'z', -0.8), transparency=0.5)  # the wing is defined in a different /
+        return Wing(position=translate(self.position, 'x',22, 'y', 1.3, 'z', -1.2), transparency=0.5)  # the wing is defined in a different /
         # reference system than its parent aircraft
     @Part
     def left_wing(self):

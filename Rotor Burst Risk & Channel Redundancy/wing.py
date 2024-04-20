@@ -72,7 +72,8 @@ class Wing(LoftedSolid):
             from_position=self.root_section_unscaled.position,
             to_position=translate(self.root_section_unscaled.position,  # to_position, i.e. the wing tip section
                                   'y', self.w_semi_span,
-                                  'x', self.w_semi_span * tan(radians(self.sweep_TE))
+                                  'x', self.w_semi_span * tan(radians(self.sweep_TE)),
+                                  'z', 1,
                                   ),  # the sweep is applied
             hidden=True
         )
@@ -107,18 +108,6 @@ class Wing(LoftedSolid):
     def profiles(self):
         return [self.root_section, self.tip_section]
 
-    @Attribute # movable spar points on root section
-    def spar_pln_locs_root(self):
-        return [self.root_section.interpolate(self.root_section, self.s_c_fraction1),
-                self.root_section.interpolate(self.root_section, self.s_c_fraction2)]
-
-    @Attribute  # movable spar points on tip section
-    def spar_pln_locs_tip(self):
-        return [self.tip_section.interpolate(self.tip_section, self.s_c_fraction1),
-                self.tip_section.interpolate(self.tip_section, self.s_c_fraction2)]
-
-    def spar(self):
-        return RuledSolid()
 
 
 if __name__ == '__main__':

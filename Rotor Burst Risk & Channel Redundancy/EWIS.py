@@ -6,11 +6,11 @@ from channel import ChannelY, ChannelZ, ChannelX, ChannelSweep
 class Ewis(GeomBase):
     @Part
     def channel1(self):
-        return ChannelX(ch_radius=0.2, position=translate(self.position, 'x', 5, 'y', 1, 'z', -0.6), color="Blue")
+        return ChannelX(ch_radius=0.2, position=translate(self.position, 'x', 5, 'y', 1, 'z', -1), color="Blue")
 
     @Part
     def channel2(self):
-        return ChannelX(ch_radius=0.2, position=translate(self.position, 'x', 5, 'y', -1, 'z', -0.6), color="Blue")
+        return ChannelX(ch_radius=0.2, position=translate(self.position, 'x', 5, 'y', -1, 'z', -1), color="Blue")
 
     @Part
     def channel3(self):
@@ -22,31 +22,31 @@ class Ewis(GeomBase):
 
     @Part
     def channel5(self):
-        return ChannelY(ch_radius=.1, position=translate(self.position, 'x', 7, 'y', -1, 'z', -0.6), color='Blue')
+        return ChannelY(ch_radius=.1, position=translate(self.position, 'x', 7, 'y', -1, 'z', -1), color='Blue')
 
     @Part
     def channel6(self):
-        return ChannelY(ch_radius=.1, position=translate(self.position, 'x', 30, 'y', -1, 'z', -0.6), color='Blue')
+        return ChannelY(ch_radius=.1, position=translate(self.position, 'x', 30, 'y', -1, 'z', -1), color='Blue')
 
     @Part
     def channel7(self):
-        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 30, 'y', -1, 'z', -0.6), color='Blue')
+        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 30, 'y', -1, 'z', -1), color='Blue')
 
     @Part
     def channel8(self):
-        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 7, 'y', 1, 'z', -0.6), color='Blue')
+        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 7, 'y', 1, 'z', -1), color='Blue')
 
     @Part
     def channel9(self):
-        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 7, 'y', -1, 'z', -0.6), color='Blue')
+        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 7, 'y', -1, 'z', -1), color='Blue')
 
     @Part
     def channel10(self):
-        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 30, 'y', 1, 'z', -0.6), color='Blue')
+        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 30, 'y', 1, 'z', -1), color='Blue')
 
     @Part
     def channel11(self):
-        return ChannelSweep(ch_radius=.07, position=translate(self.position, 'x', 17, 'y', 1, 'z', -0.6), color='Blue')
+        return ChannelSweep(ch_radius=.07, position=translate(self.position, 'x', 17, 'y', 1, 'z', -1), color='Blue')
 
     @Part
     def channel12(self):
@@ -59,7 +59,7 @@ class Ewis(GeomBase):
                              color='Blue')
     @Part
     def channel13(self):
-        return ChannelSweep(ch_radius=.07, position=translate(self.position, 'x', 20.7, 'y', 1, 'z', -0.6), color='Blue',sweep_rad=1.03, ch_length=10.5)
+        return ChannelSweep(ch_radius=.07, position=translate(self.position, 'x', 20.7, 'y', 1, 'z', -1.05), color='Blue',sweep_rad=1.03, dihedral=0.145, ch_length=10.5)
 
     @Part
     def channel14(self):
@@ -73,7 +73,7 @@ class Ewis(GeomBase):
 
     @Part
     def channel15(self):
-        return ChannelX(ch_radius=0.07, position=translate(self.position, 'x', 21.1, 'y', 6, 'z', -0.6), color="Blue", ch_length=2.12)
+        return ChannelX(ch_radius=0.06, position=translate(self.position, 'x', 21.1, 'y', 6, 'z', -0.6), color="Blue", ch_length=2.15)
 
     @Part
     def channel16(self):
