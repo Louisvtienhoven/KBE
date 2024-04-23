@@ -12,6 +12,7 @@ from fuselage.channel import ChannelSweep, ChannelZ, ChannelX
 class Assembly(GeomBase):
     wing_mount = True
 
+
     x_pos_engine_wing = Input(16.5)
     y_pos_engine_wing = Input(5)
     z_pos_engine_wing = Input(-2.15)
@@ -135,9 +136,61 @@ class Assembly(GeomBase):
                         dihedral=0.5,
                         w_c_root=2.5,
                         w_c_tip =1.24,
-                        sweep_TE = 15
+                        sweep_TE = 15,
+                        transparency = 0.5
                         )
 
+        @Part
+        def channel_htail1(self):
+            return ChannelSweep(ch_radius=.02, position=translate(self.position, 'x', 41, 'y', 0, 'z', 5.85),
+                                color='Blue',
+                                sweep_rad=1.05,
+                                ch_length=4,
+                                dihedral=0.15)
+
+        @Part
+        def channel_htail2(self):
+            return MirroredShape(shape_in=self.channel11,
+                                 reference_point=self.position,
+                                 # Two vectors to define the mirror plane
+                                 vector1=self.position.Vz,
+                                 vector2=self.position.Vx,
+                                 mesh_deflection=0.0001,
+                                 color='Blue')
+
+        @Part
+        def channel_htail3(self):
+            return ChannelSweep(ch_radius=.02, position=translate(self.position, 'x', 42.8, 'y', 0, 'z', 5.8),
+                                color='Blue', sweep_rad=1.3, dihedral=0.4, ch_length=3.3)
+
+        @Part
+        def channel_htail4(self):
+            return MirroredShape(shape_in=self.channel13,
+                                 reference_point=self.position,
+                                 # Two vectors to define the mirror plane
+                                 vector1=self.position.Vz,
+                                 vector2=self.position.Vx,
+                                 mesh_deflection=0.0001,
+                                 color='Blue')
+
+
+
+        @Part
+        def channel_htail7(self):
+            return ChannelX(ch_radius=.02, position=translate(self.position, 'x', 41.65, 'y', 1.2, 'z',5.9),
+                            color='Blue',
+                            ch_length=1.47
+                            )
+
+        @Part
+        def channel_htail8(self):
+            return MirroredShape(shape_in=self.channel7,
+                                 reference_point=self.position,
+                                 # Two vectors to define the mirror plane
+                                 vector1=self.position.Vz,
+                                 vector2=self.position.Vx,
+                                 mesh_deflection=0.0001,
+                                 color='Blue')
 
     # @Part
     # def mirrored_engine(self):
@@ -157,6 +210,7 @@ class Assembly(GeomBase):
                              vector1=self.position.Vz,
                              vector2=self.position.Vx,
                              mesh_deflection=0.0001,
+                             transparency=0.5
                              )
 
 

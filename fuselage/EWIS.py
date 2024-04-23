@@ -108,7 +108,7 @@ class Ewis(GeomBase):
 
     @Part
     def channel19(self):
-        return ChannelX(ch_radius=0.04,
+        return ChannelX(ch_radius=0.02,
                         position=translate(self.position, 'x',39.3,'y',0, 'z',4),
                         color='Blue',
                         ch_length=2.3
