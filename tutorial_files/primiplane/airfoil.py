@@ -14,7 +14,7 @@
 import os.path
 from parapy.geom import *
 from parapy.core import *
-from primiplane import AIRFOIL_DIR
+from tutorial_files.primiplane import AIRFOIL_DIR
 
 
 class Airfoil(FittedCurve):  # note the use of FittedCurve as superclass

@@ -16,7 +16,7 @@ from math import radians
 from parapy.geom import *
 from parapy.core import *
 
-from primiplane import Fuselage, LiftingSurface, XfoilAnalysis
+from tutorial_files.primiplane import Fuselage, LiftingSurface, XfoilAnalysis
 
 DIR = os.path.dirname(__file__)
 
