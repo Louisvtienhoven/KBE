@@ -10,7 +10,7 @@ from fuselage.channel import ChannelSweep, ChannelZ, ChannelX
 
 
 class Assembly(GeomBase):
-    wing_mount = True
+    wing_mount = Input(True)
 
     x_pos_engine_wing = Input(16.5)
     y_pos_engine_wing = Input(5)
@@ -30,8 +30,8 @@ class Assembly(GeomBase):
         def engine(self):
             return Engine(quantify=2,
                           position=translate(self.position.rotate90('y','z'),
-                                            'x',self.y_pos_engine_wing,
-                                            'y',self.z_pos_engine_wing*(-1)**child.index,
+                                            'x',self.y_pos_engine_wing*(-1)**child.index,
+                                            'y',self.z_pos_engine_wing,
                                             'z',self.x_pos_engine_wing)
                                             )  # circles are in XY plane, thus need rotation
         @Part
