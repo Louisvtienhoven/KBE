@@ -19,27 +19,12 @@ from utilities.ref_frame import Frame
 from math import *
 import numpy as np
 
-class EngineStageRotors(GeomBase):
-    n_rotors = Input(3)
-
-    n_blades = Input()
-    blade_height = Input()
-    blade_depth = Input()
-    stage_diameter = Input()
-    hub_diameter = Input()
-
-
-    @Part
-    def rotors(self):
-        return EngineStageBlades(quantify = self.n_rotors,
-                                 position=translate(self.position, 'z', self.blade_depth * 2))
-
-class EngineStageBlades(EngineStageRotors):
-    n_blades = Input()
-    blade_height = Input()
-    blade_depth = Input()
-    stage_diameter = Input()
-    hub_diameter = Input()
+class EngineStageRotor(GeomBase):
+    n_blades = Input(18)
+    blade_height = Input(5)
+    blade_depth = Input(5)
+    stage_diameter = Input(10)
+    hub_diameter = Input(2)
 
     @Attribute
     def tip_chord(self):
@@ -65,9 +50,7 @@ class EngineStageBlades(EngineStageRotors):
                    ))
 
 
-
-
 if __name__ == '__main__':
     from parapy.gui import display
-    obj = EngineStageBlades()
+    obj = EngineStageRotor()
     display(obj)

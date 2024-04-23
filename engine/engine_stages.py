@@ -15,13 +15,12 @@ Model blades initially as ruled surfaces
 
 from parapy.geom import *
 from parapy.core import *
-from engine.engine_blades import EngineStageRotors
+from engine.engine_blades import EngineStageRotor
 from utilities.ref_frame import Frame
 from math import *
 import numpy as np
 
 class EngineStage(GeomBase):
-    n_stages = Input(5)
     stage_outer_diameter = Input(2.0)
     stage_hub_diameter = Input(0.5)
     stage_depth = Input(0.2)
@@ -37,13 +36,14 @@ class EngineStage(GeomBase):
         return (self.stage_outer_diameter - self.stage_hub_diameter) / 2
 
     @Part
-    def blades(self):
-        return EngineStageRotors(quantify=self.n_rotors,
-                                 map_down="n_blades_per_stage->n_blades,\
-                                 blade_heights->blade_height,\
-                                 blade_depths->blade_depth,\
-                                 stage_outer_diameter->stage_diameter,\
-                                 stage_hub_diameter->hub_diameter")
+    def rotors(self):
+        return EngineStageRotor(quantify=self.n_rotors,
+                                position=translate(self.position, 'z', (self.blade_depths * 2) * child.index),
+                                n_blades=self.n_blades_per_stage,
+                                blade_height=self.blade_heights,
+                                blade_depth=self.blade_depths,
+                                stage_diameter=self.stage_outer_diameter,
+                                hub_diameter=self.stage_hub_diameter)
 
 if __name__ == '__main__':
     from parapy.gui import display

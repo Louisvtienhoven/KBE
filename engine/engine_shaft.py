@@ -61,7 +61,7 @@ class EngineShaft(GeomBase):
                         hidden=True)
 
     @Part
-    def stages_layout(self):
+    def stages_disks(self):
         return SubtractedSolid(quantify=self.n_stages,
                                shape_in = self.outer_stage_disks[child.index],
                                tool = self.inner_stage_disks[child.index],
@@ -73,7 +73,6 @@ class EngineShaft(GeomBase):
         return EngineStage(quantify=self.n_stages,
                            position=translate(self.position, 'z',
                                               self.stages_start_point[child.index] * self.shaft_length),
-                           pass_down="n_stages",
                            map_down="blades_per_stage->n_blades_per_stage,\
                             stage_hub_diameters->stage_hub_diameter,\
                             stage_outer_diameters->stage_outer_diameter,\
