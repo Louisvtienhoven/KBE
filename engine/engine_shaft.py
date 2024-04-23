@@ -17,7 +17,7 @@ from parapy.geom import *
 from parapy.core import *
 from utilities.ref_frame import Frame
 import numpy as np
-from engine_stages import EngineStage
+from engine.engine_stages import EngineStage
 
 class EngineShaft(GeomBase):
     n_stages = Input(5)
@@ -34,7 +34,7 @@ class EngineShaft(GeomBase):
 
     @Attribute
     def stages_heights(self):
-        return list(np.diff(np.append(self.stages_start_point, 1)))
+        return list(np.diff(np.append(self.stages_start_point, 1)) * self.shaft_length)
 
     @Part
     def shaft_frame(self):
@@ -49,7 +49,7 @@ class EngineShaft(GeomBase):
         return Cylinder(quantify=self.n_stages,
                         radius=self.stage_outer_diameters[child.index] / 2,
                         position=translate(self.position, 'z', self.stages_start_point[child.index] * self.shaft_length),
-                        height=self.stages_heights[child.index] * self.shaft_length,
+                        height=self.stages_heights[child.index],
                         hidden=True)
 
     @Part
@@ -57,7 +57,7 @@ class EngineShaft(GeomBase):
         return Cylinder(quantify=self.n_stages,
                         radius=self.stage_hub_diameters[child.index] / 2,
                         position=translate(self.position, 'z', self.stages_start_point[child.index] * self.shaft_length),
-                        height=self.stages_heights[child.index] * self.shaft_length,
+                        height=self.stages_heights[child.index],
                         hidden=True)
 
     @Part
@@ -71,6 +71,8 @@ class EngineShaft(GeomBase):
     @Part
     def stages(self):
         return EngineStage(quantify=self.n_stages,
+                           position=translate(self.position, 'z',
+                                              self.stages_start_point[child.index] * self.shaft_length),
                            pass_down="n_stages",
                            map_down="blades_per_stage->n_blades_per_stage,\
                             stage_hub_diameters->stage_hub_diameter,\

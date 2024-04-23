@@ -19,11 +19,27 @@ from utilities.ref_frame import Frame
 from math import *
 import numpy as np
 
-class EngineStageBlades(GeomBase):
+class EngineStageRotors(GeomBase):
+    n_rotors = Input(3)
+
     n_blades = Input()
     blade_height = Input()
     blade_depth = Input()
     stage_diameter = Input()
+    hub_diameter = Input()
+
+
+    @Part
+    def rotors(self):
+        return EngineStageBlades(quantify = self.n_rotors,
+                                 position=translate(self.position, 'z', self.blade_depth * 2))
+
+class EngineStageBlades(EngineStageRotors):
+    n_blades = Input()
+    blade_height = Input()
+    blade_depth = Input()
+    stage_diameter = Input()
+    hub_diameter = Input()
 
     @Attribute
     def tip_chord(self):
@@ -41,11 +57,13 @@ class EngineStageBlades(GeomBase):
     @Part
     def blades(self):
         return Box(quantify=self.n_blades,
-                   width=self.tip_chord,
+                   width=self.blade_height,
                    height=self.blade_depth,
-                   length=self.blade_height,
-                   position=rotate(self.position,'z', child.index * self.angular_separation)
-                   )
+                   length=self.tip_chord,
+                   position=translate(rotate(self.position,'z', angle=child.index * self.angular_separation),
+                                      'x', self.hub_diameter /2
+                   ))
+
 
 
 

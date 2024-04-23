@@ -15,10 +15,8 @@ Model blades initially as ruled surfaces
 
 from parapy.geom import *
 from parapy.core import *
-from engine_nacelle import Nacelle
-from engine_shaft import EngineShaft
-from utilities.ref_frame import Frame
-from math import *
+from engine.engine_nacelle import Nacelle
+
 
 class Pylon(GeomBase):
     fan_diameter = Input(1.)

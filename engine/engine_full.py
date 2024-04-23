@@ -15,10 +15,11 @@ Model blades initially as ruled surfaces
 
 from parapy.geom import *
 from parapy.core import *
-from engine_nacelle import Nacelle
-from engine_shaft import EngineShaft
-from engine_pylon import Pylon
+from engine.engine_nacelle import Nacelle
+from engine.engine_shaft import EngineShaft
+from engine.engine_pylon import Pylon
 from utilities.ref_frame import Frame
+
 
 
 class Engine(GeomBase):
