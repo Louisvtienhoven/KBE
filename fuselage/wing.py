@@ -6,6 +6,7 @@
 from math import radians, tan
 from parapy.geom import *
 from parapy.core import *
+from utilities.ref_frame import Frame
 
 class Wing(LoftedSolid):
     """Basic wing geometry: a loft between root and tip airfoil"""
@@ -19,7 +20,9 @@ class Wing(LoftedSolid):
     @Attribute
     def pts(self):
         """ Extract airfoil coordinates from a data file and create a list of 3D points"""
-        with open('whitcomb.dat', 'r') as f:
+        import os
+        os.chdir('../fuselage')
+        with open('./whitcomb.dat', 'r') as f:
             points = []
             for line in f:
                 x, y = line.split(' ', 1)  # separator = " "; max number of split = 1

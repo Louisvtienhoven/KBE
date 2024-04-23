@@ -3,12 +3,12 @@
 from parapy.geom import *
 from parapy.core import *
 
-from ref_frame import Frame
-from wing import Wing
-from fuselage import Fuselage
-from channel import ChannelX, ChannelY, ChannelZ
+from utilities.ref_frame import Frame
+from fuselage.wing import Wing
+from fuselage.fuselage_structure import Fuselage
+from fuselage.channel import ChannelX, ChannelY, ChannelZ
 
-from EWIS import Ewis
+from fuselage.EWIS import Ewis
 
 class AircraftBody (GeomBase):
 
@@ -57,5 +57,5 @@ class AircraftBody (GeomBase):
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = Aircraft(label="aircraft")
+    obj = AircraftBody(label="aircraft")
     display(obj)

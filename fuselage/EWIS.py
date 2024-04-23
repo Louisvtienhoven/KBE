@@ -1,7 +1,7 @@
 from parapy.geom import *
 from parapy.core import *
 
-from channel import ChannelY, ChannelZ, ChannelX, ChannelSweep, ChannelVtail
+from fuselage.channel import ChannelY, ChannelZ, ChannelX, ChannelSweep, ChannelVtail
 
 class Ewis(GeomBase):
     @Part
