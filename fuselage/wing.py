@@ -12,8 +12,8 @@ class Wing(LoftedSolid):
     w_c_root = Input(6.)  # wing root chord
     w_c_tip = Input(2.3)  # wing tip chord
     w_semi_span = Input(10.)  # wing semi-span
-    sweep_TE = Input(25)  # sweep angle, in degrees. Defined at the wing trailing edge (TE)
-
+    sweep_TE = Input(25.)  # sweep angle, in degrees. Defined at the wing trailing edge (TE)
+    dihedral = Input(1.)
 
 
     @Attribute
@@ -73,7 +73,7 @@ class Wing(LoftedSolid):
             to_position=translate(self.root_section_unscaled.position,  # to_position, i.e. the wing tip section
                                   'y', self.w_semi_span,
                                   'x', self.w_semi_span * tan(radians(self.sweep_TE)),
-                                  'z', 1,
+                                  'z', self.dihedral,
                                   ),  # the sweep is applied
             hidden=True
         )

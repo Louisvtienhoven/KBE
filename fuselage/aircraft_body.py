@@ -10,7 +10,9 @@ from channel import ChannelX, ChannelY, ChannelZ
 
 from EWIS import Ewis
 
-class Aircraft (GeomBase):
+class AircraftBody (GeomBase):
+
+
     @Part
     def aircraft_frame(self):
         return Frame(pos=self.position)  # this helps visualizing the aircraft reference frame, /
@@ -18,7 +20,7 @@ class Aircraft (GeomBase):
 
     @Part
     def fuselage(self):
-        return Fuselage(position=translate(self.position, 'x'))
+        return Fuselage(position=translate(self.position, 'x'),transparency=0.5)
 
     @Part
     def right_wing(self):
@@ -33,6 +35,18 @@ class Aircraft (GeomBase):
                              vector2=self.position.Vx,
                              mesh_deflection=0.0001,
                              transparency = 0.5)
+
+    @Part
+
+    def v_tail(self):
+        return Wing(position=translate(self.position.rotate90('x'),
+                                       'x',41,
+                                       'y', 1,
+                                       'z', 0),
+                    w_semi_span = 5.87,
+                    dihedral = 0,
+                    transparency=0.5
+        )
     @Part
     def wiring_system(self):
         return Ewis(position=translate(self.position, 'x'))

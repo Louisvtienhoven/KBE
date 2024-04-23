@@ -1,7 +1,7 @@
 from parapy.geom import *
 from parapy.core import *
 
-from channel import ChannelY, ChannelZ, ChannelX, ChannelSweep
+from channel import ChannelY, ChannelZ, ChannelX, ChannelSweep, ChannelVtail
 
 class Ewis(GeomBase):
     @Part
@@ -14,11 +14,11 @@ class Ewis(GeomBase):
 
     @Part
     def channel3(self):
-        return ChannelX(ch_radius=.1, position=translate(self.position, 'x', 5, 'y', 1, 'z', 1), color="Blue")
+        return ChannelX(ch_radius=.1, position=translate(self.position, 'x', 5, 'y', 1, 'z', 1), color="Blue", ch_length=35.7)
 
     @Part
     def channel4(self):
-        return ChannelX(ch_radius=.1, position=translate(self.position, 'x', 5, 'y', -1, 'z', 1), color='Blue')
+        return ChannelX(ch_radius=.1, position=translate(self.position, 'x', 5, 'y', -1, 'z', 1), color='Blue',ch_length=35.7)
 
     @Part
     def channel5(self):
@@ -26,11 +26,15 @@ class Ewis(GeomBase):
 
     @Part
     def channel6(self):
-        return ChannelY(ch_radius=.1, position=translate(self.position, 'x', 30, 'y', -1, 'z', -1), color='Blue')
+        return ChannelY(ch_radius=.1, position=translate(self.position, 'x', 40, 'y', -1, 'z', 1), color='Blue')
+
+    @Part
+    def channel62(self):
+        return ChannelY(ch_radius=.1, position=translate(self.position, 'x', 36.5, 'y', -1, 'z', 1), color='Blue')
 
     @Part
     def channel7(self):
-        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 30, 'y', -1, 'z', -1), color='Blue')
+        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 36.5, 'y', -1, 'z', -1), color='Blue')
 
     @Part
     def channel8(self):
@@ -42,7 +46,7 @@ class Ewis(GeomBase):
 
     @Part
     def channel10(self):
-        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 30, 'y', 1, 'z', -1), color='Blue')
+        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 36.5, 'y', 1, 'z', -1), color='Blue')
 
     @Part
     def channel11(self):
@@ -84,6 +88,27 @@ class Ewis(GeomBase):
                              vector2=self.position.Vx,
                              mesh_deflection=0.0001,
                              color='Blue')
+
+    @Part
+    def channel17(self):
+        return ChannelVtail(ch_radius=.04,
+                            position=translate(self.position, 'x', 36.5, 'y', 0, 'z', 1),
+                            color='Blue',
+                            sweep_rad=.33,
+                            dihedral=0.,
+                            ch_length=6.5)
+    @Part
+    def channel18(self):
+        return ChannelVtail(ch_radius=.04,
+                            position=translate(self.position, 'x', 40, 'y', 0, 'z', 1),
+                            color='Blue',
+                            sweep_rad=1.,
+                            dihedral=0.,
+                            ch_length=5.5)
+
+
+
+
 
 if __name__ == '__main__':
     from parapy.gui import display

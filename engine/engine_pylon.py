@@ -20,7 +20,7 @@ from engine.engine_nacelle import Nacelle
 
 class Pylon(GeomBase):
     fan_diameter = Input(1.)
-    length = Input(1.)
+    length = Input(.8)
 
     @Attribute
     def pylon_height(self):
@@ -36,7 +36,7 @@ class Pylon(GeomBase):
 
     @Part
     def pylon_wing_mount(self):
-        return Rectangle(position=rotate90(translate(self.position, 'y', self.pylon_height, 'z', self.length*1.2), 'x'),
+        return Rectangle(position=rotate90(translate(self.position, 'y', self.pylon_height, 'z', self.length*1.6), 'x'),
                          width=0.1 * self.fan_diameter,
                          length=self.length,
                          centered=True)
