@@ -1,7 +1,7 @@
 from math import radians
 from parapy.geom import *
 from parapy.core import *
-from primiplane import Fuselage, Wing
+from tutorial_files.primiplane import Fuselage, Wing
 
 class Aircraft(GeomBase):
     fu_radius = Input(2.5)

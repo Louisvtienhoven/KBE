@@ -14,7 +14,7 @@
 from math import radians, tan
 from parapy.geom import *
 from parapy.core import *
-from primiplane import Airfoil, Movable
+from tutorial_files.primiplane import Airfoil, Movable
 
 
 class LiftingSurface(LoftedSolid):  # note use of loftedSolid as superclass
