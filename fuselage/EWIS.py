@@ -14,11 +14,11 @@ class Ewis(GeomBase):
 
     @Part
     def channel3(self):
-        return ChannelX(ch_radius=.1, position=translate(self.position, 'x', 5, 'y', 1, 'z', 1), color="Blue", ch_length=35.7)
+        return ChannelX(ch_radius=.1, position=translate(self.position, 'x', 5, 'y', 1, 'z', 1), color="Blue", ch_length=35.2)
 
     @Part
     def channel4(self):
-        return ChannelX(ch_radius=.1, position=translate(self.position, 'x', 5, 'y', -1, 'z', 1), color='Blue',ch_length=35.7)
+        return ChannelX(ch_radius=.1, position=translate(self.position, 'x', 5, 'y', -1, 'z', 1), color='Blue',ch_length=35.2)
 
     @Part
     def channel5(self):
@@ -34,7 +34,7 @@ class Ewis(GeomBase):
 
     @Part
     def channel7(self):
-        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 36.5, 'y', -1, 'z', -1), color='Blue')
+        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 37.7, 'y', -1, 'z', -1), color='Blue')
 
     @Part
     def channel8(self):
@@ -46,7 +46,7 @@ class Ewis(GeomBase):
 
     @Part
     def channel10(self):
-        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 36.5, 'y', 1, 'z', -1), color='Blue')
+        return ChannelZ(ch_radius=.1, position=translate(self.position, 'x', 37.7, 'y', 1, 'z', -1), color='Blue')
 
     @Part
     def channel11(self):
@@ -105,6 +105,14 @@ class Ewis(GeomBase):
                             sweep_rad=1.,
                             dihedral=0.,
                             ch_length=5.5)
+
+    @Part
+    def channel19(self):
+        return ChannelX(ch_radius=0.04,
+                        position=translate(self.position, 'x',39.3,'y',0, 'z',4),
+                        color='Blue',
+                        ch_length=2.3
+                        )
 
 
 

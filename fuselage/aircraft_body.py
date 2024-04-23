@@ -57,5 +57,5 @@ class AircraftBody (GeomBase):
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = AircraftBody(label="aircraft")
+    obj = Aircraft(label="aircraft")
     display(obj)
