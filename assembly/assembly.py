@@ -6,11 +6,13 @@ from fuselage.aircraft_body import AircraftBody
 from fuselage.wing import Wing
 from fuselage.channel import ChannelSweep, ChannelZ, ChannelX
 
+from engine.engine_pylon import Pylon
+
 
 
 
 class Assembly(GeomBase):
-    wing_mount = Input(True)
+    wing_mount = False
 
 
     x_pos_engine_wing = Input(16.5)
@@ -123,11 +125,38 @@ class Assembly(GeomBase):
     elif wing_mount == False:
         @Part
         def engine(self):
-            return Engine(position=translate(self.position.rotate90('y'),
-                                            'x', -1*self.z_pos_engine_fus,
-                                            'y', -1*self.y_pos_engine_fus,
+            return Engine(quantify=2,position=translate(self.position.rotate90('y'),
+                                            'x', -1*self.z_pos_engine_fus ,
+                                            'y', -1*self.y_pos_engine_fus * (-1) ** child.index,
                                             'z', self.x_pos_engine_fus,)
                                             )  # circles are in XY plane, thus need rotation
+
+        @Part
+        def pylon(self):
+            return Pylon(position=translate(self.position.rotate90('y'),
+                                            'x', -1*self.z_pos_engine_fus,
+                                            'y', -1*self.y_pos_engine_fus ,
+                                            'z', self.x_pos_engine_fus,)
+                                            )
+        @Part
+        def pylon_mirror(self):
+            return MirroredShape(shape_in=self.pylon,
+                                 reference_point=self.position,
+                                 # Two vectors to define the mirror plane
+                                 vector1=self.position.Vz,
+                                 vector2=self.position.Vx,
+                                 mesh_deflection=0.0001,
+                                 color='Black'
+                                )
+
+        # @Part
+        # def engine(self):
+        #     return Engine(quantify=2,
+        #                   position=translate(self.position.rotate90('y'),
+        #                                      'x', -1*self.y_pos_engine_wing ,
+        #                                      'y', -1*self.z_pos_engine_wing * (-1) ** child.index,
+        #                                      'z', self.x_pos_engine_wing)
+        #                   )  # circles are in XY plane, thus need rotation
 
         @Part
         def h_tail(self):

@@ -36,9 +36,9 @@ class Engine(GeomBase):
     def shaft(self):
         return EngineShaft(shaft_length = self.length * 0.9)
 
-    @Part
-    def blank_pylon(self):
-        return Pylon(pass_down="length, fan_diameter")
+    # @Part
+    # def blank_pylon(self):
+    #     return Pylon(pass_down="length, fan_diameter")
 
 
 if __name__ == '__main__':

@@ -18,9 +18,9 @@ from parapy.core import *
 from engine.engine_nacelle import Nacelle
 
 
-class Pylon(GeomBase):
-    fan_diameter = Input(1.)
-    length = Input(.8)
+class Pylon(LoftedSolid):
+    fan_diameter = Input(2.)
+    length = Input(3.)
 
     @Attribute
     def pylon_height(self):
@@ -44,9 +44,13 @@ class Pylon(GeomBase):
 
     @Part
     def pylon(self):
-        return RuledSolid(profile1=self.pylon_engine_mount,
-                          profile2=self.pylon_wing_mount,
+        return LoftedSolid(profiles=[self.pylon_engine_mount, self.pylon_wing_mount],
                           color='black')
+
+    @Attribute
+    def profiles(self):
+        return [self.pylon_engine_mount, self.pylon_wing_mount]
+
 
 if __name__ == '__main__':
     from parapy.gui import display
