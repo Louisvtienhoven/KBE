@@ -47,7 +47,8 @@ class EngineStageRotor(GeomBase):
                    length=self.tip_chord,
                    position=translate(rotate(self.position,'z', angle=child.index * self.angular_separation),
                                       'x', self.hub_diameter /2
-                   ))
+                   ),
+                   hidden=True)
 
 
 if __name__ == '__main__':

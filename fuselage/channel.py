@@ -30,6 +30,10 @@ class ChannelX(LoftedShell):  # note the use of LoftedSolid as superclass. It me
     # ch_position_y = Input(0)
     # ch_position_z = Input(0)
     @Attribute
+    def yz_position(self):
+        return self.position[1], self.position[2]
+
+    @Attribute
     def section_radius(self):
         """section radius multiplied by the radius distribution
         through the length. Note that the numbers are percentages.
