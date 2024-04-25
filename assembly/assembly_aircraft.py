@@ -11,15 +11,16 @@ from assembly.config_conv import WingMounted
 from assembly.config_t_tail import FuselageMounted
 
 #Conventional Layout -> for T-tail: wing_mount = False
-wing_mount = False
+wing_mount = True
 
 class Assembly(GeomBase):
     @Part
     def aircraftbody(self):
         return AircraftBody(position=self.position)
 
+
     #Wing mounted case
-    if wing_mount:
+    if wing_mount == True:
         @Part
         def wing_mount(self):
             return WingMounted(position=self.position)

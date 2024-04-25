@@ -16,8 +16,8 @@ class RiskVolume(GeomBase):
     else:
         engine = FuselageMounted().engine
 
-    channel_y = ewis.channel2.position.y
-    channel_z = ewis.channel2.position.z
+    channel_y = ewis.lower_channel2.position.y
+    channel_z = ewis.lower_channel2.position.z
 
     engine_shaft_location = engine[0].position
     engine_stage = engine[0].shaft.stages[0]
