@@ -1,12 +1,20 @@
 from parapy.geom import *
 from parapy.core import *
 
-from assembly.assembly import Assembly
+from assembly.assembly_aircraft import Assembly
 from fuselage.EWIS import Ewis
+from assembly.config_conv import WingMounted
+from assembly.config_t_tail import FuselageMounted
+
+from assembly.assembly_aircraft import wing_mount
 
 class RiskVolume(GeomBase):
     ewis = Ewis()
-    engine = Assembly().engine
+
+    if wing_mount:
+        engine = WingMounted().engine
+    else:
+        engine = FuselageMounted().engine
 
     channel_y = ewis.channel2.position.y
     channel_z = ewis.channel2.position.z

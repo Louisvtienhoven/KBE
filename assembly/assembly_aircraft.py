@@ -6,11 +6,12 @@ from fuselage.aircraft_body import AircraftBody
 from fuselage.wing import Wing
 from fuselage.channel import ChannelSweep, ChannelZ, ChannelX
 
-from config_t_tail import FuselageMounted
-from config_conv import WingMounted
+
+from assembly.config_conv import WingMounted
+from assembly.config_t_tail import FuselageMounted
 
 #Conventional Layout -> for T-tail: wing_mount = False
-wing_mount = True
+wing_mount = False
 
 class Assembly(GeomBase):
     @Part
