@@ -20,63 +20,65 @@ import numpy as np
 from engine.engine_stages import EngineStage
 
 class EngineShaft(GeomBase):
-    n_stages = Input(5)
-    shaft_length = Input(3.0) # m
+    nStages = Input(5)
+    shaftLength = Input(3.0) # m
 
-    stage_outer_diameters = Input([2.0, 0.8, 0.6, 1.0, 1.2])
-    stage_hub_diameters = Input([0.5, 0.6, 0.4, 0.5, 0.5])
-    stages_start_point = Input([0, 0.2, 0.4, 0.7, 0.8])
+    stagesOuterDiameters = Input([2.0, 0.8, 0.6, 1.0, 1.2])
+    stagesHubDiameters = Input([0.5, 0.6, 0.4, 0.5, 0.5])
+    stagesStartPoint = Input([0, 0.2, 0.4, 0.7, 0.8])
 
-    rotors_per_stage = Input([1,3,7,2,7])
-    blades_per_stage = Input([18,100,100,100,100])
+    rotorsPerStage = Input([1, 3, 7, 2, 7])
+    bladesPerRotor = Input([18, 100, 100, 100, 100])
 
     transparency = Input(0.7)
 
     @Attribute
-    def stages_heights(self):
-        return list(np.diff(np.append(self.stages_start_point, 1)) * self.shaft_length)
+    def stagesThickness(self):
+        return list(np.diff(np.append(self.stagesStartPoint, 1)) * self.shaftLength)
 
     @Part
-    def shaft_frame(self):
+    def shaftFrame(self):
         return Frame(pos=self.position)
 
     @Part
-    def center_shaft(self):
-        return Cylinder(radius=min(self.stage_hub_diameters)/2, height=self.shaft_length, centered=False)
+    def centerShaft(self):
+        return Cylinder(radius=min(self.stagesHubDiameters) / 2, height=self.shaftLength, centered=False)
 
     @Part
-    def outer_stage_disks(self):
-        return Cylinder(quantify=self.n_stages,
-                        radius=self.stage_outer_diameters[child.index] / 2,
-                        position=translate(self.position, 'z', self.stages_start_point[child.index] * self.shaft_length),
-                        height=self.stages_heights[child.index],
+    def outerStageDisks(self):
+        return Cylinder(quantify=self.nStages,
+                        radius=self.stagesOuterDiameters[child.index] / 2,
+                        position=translate(self.position, 'z', self.stagesStartPoint[child.index] * self.shaftLength),
+                        height=self.stagesThickness[child.index],
                         hidden=True)
 
     @Part
-    def inner_stage_disks(self):
-        return Cylinder(quantify=self.n_stages,
-                        radius=self.stage_hub_diameters[child.index] / 2,
-                        position=translate(self.position, 'z', self.stages_start_point[child.index] * self.shaft_length),
-                        height=self.stages_heights[child.index],
+    def innerStageDisks(self):
+        return Cylinder(quantify=self.nStages,
+                        radius=self.stagesHubDiameters[child.index] / 2,
+                        position=translate(self.position, 'z', self.stagesStartPoint[child.index] * self.shaftLength),
+                        height=self.stagesThickness[child.index],
                         hidden=True)
 
     @Part
-    def stages_disks(self):
-        return SubtractedSolid(quantify=self.n_stages,
-                               shape_in = self.outer_stage_disks[child.index],
-                               tool = self.inner_stage_disks[child.index],
+    def stagesDisks(self):
+        return SubtractedSolid(quantify=self.nStages,
+                               shape_in = self.outerStageDisks[child.index],
+                               tool = self.innerStageDisks[child.index],
                                color = 'red',
                                transparency=self.transparency)
 
     @Part
     def stages(self):
-        return EngineStage(quantify=self.n_stages,
+        return EngineStage(quantify=self.nStages,
                            position=translate(self.position, 'z',
-                                              self.stages_start_point[child.index] * self.shaft_length),
-                           map_down="stage_hub_diameters->stage_hub_diameter,\
-                            stage_outer_diameters->stage_outer_diameter,\
-                            stages_heights->stage_depth,\
-                            rotors_per_stage->n_rotors")
+                                              self.stagesStartPoint[child.index] * self.shaftLength),
+                           map_down="stagesHubDiameters->hubDiameter,\
+                            stagesOuterDiameters->outerDiameter,\
+                            stagesThickness->stageThickness,\
+                            rotorsPerStage->nRotors, \
+                            bladesPerRotor->nBladesPerRotor")
+
 
 
 if __name__ == '__main__':

@@ -34,22 +34,22 @@ class RiskVolumePerStage(GeomBase):
 
     @Attribute
     def risk_volume_length(self):
-        return self.engine_stage.blade_depths
+        return self.engine_stage.rotorThickness
 
     @Attribute
     def risk_volume_width(self):
-        return self.engine_stage.blade_heights
+        return self.engine_stage.bladeSpan
 
     @Part
     def risk_volume_CW_turning(self):
         return Box(quantify=self.engine_stage.rotors.quantify,
                    width=self.risk_volume_height,
-                   length=self.engine_stage.blade_heights,
-                   height=self.engine_stage.blade_depths,
+                   length=self.engine_stage.bladeSpan,
+                   height=self.engine_stage.rotorThickness,
                    position=translate(
                        rotate(self.engine_stage.position,'z', angle = self.risk_volume_orientation, deg=True),
-                       'y', self.engine_stage.stage_hub_diameter / 2,
-                   'z', child.index * self.engine_stage.blade_depths * 2),
+                       'y', self.engine_stage.hubDiameter / 2,
+                   'z', child.index * self.engine_stage.rotorThickness * 2),
                    color = 'red'
                    )
 
@@ -57,14 +57,14 @@ class RiskVolumePerStage(GeomBase):
     def risk_volume_CCW_turning(self):
         return Box(quantify=self.engine_stage.rotors.quantify,
                    width=self.risk_volume_height,
-                   length=self.engine_stage.blade_heights,
-                   height=self.engine_stage.blade_depths,
+                   length=self.engine_stage.bladeSpan,
+                   height=self.engine_stage.rotorThickness,
                    position=translate(
                        rotate(
                            translate(self.engine_stage.position, 'x', self.risk_volume_height)
                            ,'z', angle = self.risk_volume_orientation, deg=True),
-                       'y', self.engine_stage.stage_hub_diameter / 2,
-                   'z', child.index * self.engine_stage.blade_depths * 2),
+                       'y', self.engine_stage.hubDiameter / 2,
+                   'z', child.index * self.engine_stage.rotorThickness * 2),
                    color = 'red'
                    )
 

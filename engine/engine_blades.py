@@ -15,39 +15,34 @@ Model blades initially as ruled surfaces
 
 from parapy.geom import *
 from parapy.core import *
-from utilities.ref_frame import Frame
 from math import *
 import numpy as np
 
 class EngineStageRotor(GeomBase):
-    n_blades = Input(18)
-    blade_height = Input(5)
-    blade_depth = Input(5)
-    stage_diameter = Input(10)
-    hub_diameter = Input(2)
+    nBlades = Input(18)
+    bladeSpan = Input(5)
+    bladeDepth = Input(5)
+    rotorDiameter = Input(10)
+    hubDiameter = Input(2)
 
     @Attribute
-    def tip_chord(self):
-        outer_circum = pi * np.array(self.stage_diameter)
-        return outer_circum / np.array(self.n_blades)
+    def bladeBoxWidth(self):
+        outer_circum = pi * np.array(self.rotorDiameter)
+        return outer_circum / np.array(self.nBlades)
 
     @Attribute
-    def angular_separation(self):
-        return 2 * pi / np.array(self.n_blades) # rad
-
-    @Part
-    def stage_frame(self):
-        return Frame(pos=self.position)
+    def angularSeparation(self):
+        return 2 * pi / np.array(self.nBlades) # rad
 
     @Part
     def blades(self):
-        return Box(quantify=self.n_blades,
-                   width=self.blade_height,
-                   height=self.blade_depth,
-                   length=self.tip_chord,
-                   position=translate(rotate(self.position,'z', angle=child.index * self.angular_separation),
-                                      'x', self.hub_diameter /2
-                   ),
+        return Box(quantify=self.nBlades,
+                   width=self.bladeSpan,
+                   height=self.bladeDepth,
+                   length=self.bladeBoxWidth,
+                   position=translate(rotate(self.position,'z', angle=child.index * self.angularSeparation),
+                                      'x', self.hubDiameter / 2
+                                      ),
                    hidden=False)
 
 

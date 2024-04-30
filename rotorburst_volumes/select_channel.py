@@ -57,16 +57,16 @@ class RiskVolume(GeomBase):
 
     @Attribute
     def radial_distance(self):
-        return ((self.engine_stage.stage_outer_diameter - self.engine_stage.stage_hub_diameter)\
-        / 2 + self.engine_stage.stage_hub_diameter) / 2
+        return ((self.engine_stage.outerDiameter - self.engine_stage.hubDiameter) \
+                / 2 + self.engine_stage.hubDiameter) / 2
 
     @Attribute
     def risk_volume_length(self):
-        return self.engine_stage.blade_depths
+        return self.engine_stage.rotorThickness
 
     @Attribute
     def risk_volume_width(self):
-        return self.engine_stage.blade_heights
+        return self.engine_stage.bladeSpan
 
     @Attribute
     def risk_volume_position(self):

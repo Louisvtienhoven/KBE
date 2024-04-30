@@ -21,29 +21,29 @@ from math import *
 import numpy as np
 
 class EngineStage(GeomBase):
-    stage_outer_diameter = Input(2.0)
-    stage_hub_diameter = Input(0.5)
-    stage_depth = Input(0.2)
-    n_rotors = Input(1)
-    n_blades_per_stage = Input(18)
+    outerDiameter = Input(2.0)
+    hubDiameter = Input(0.5)
+    stageThickness = Input(0.2)
+    nRotors = Input(1)
+    nBladesPerRotor = Input(18)
 
     @Attribute
-    def blade_depths(self):
-        return self.stage_depth / (self.n_rotors * 2)
+    def rotorThickness(self):
+        return self.stageThickness / (self.nRotors * 2)
 
     @Attribute
-    def blade_heights(self):
-        return (self.stage_outer_diameter - self.stage_hub_diameter) / 2
+    def bladeSpan(self):
+        return (self.outerDiameter - self.hubDiameter) / 2
 
     @Part
     def rotors(self):
-        return EngineStageRotor(quantify=self.n_rotors,
-                                position=translate(self.position, 'z', (self.blade_depths * 2) * child.index),
-                                n_blades=self.n_blades_per_stage,
-                                blade_height=self.blade_heights,
-                                blade_depth=self.blade_depths,
-                                stage_diameter=self.stage_outer_diameter,
-                                hub_diameter=self.stage_hub_diameter)
+        return EngineStageRotor(quantify=self.nRotors,
+                                position=translate(self.position, 'z', (self.rotorThickness * 2) * child.index),
+                                nBlades=self.nBladesPerRotor,
+                                bladeSpan=self.bladeSpan,
+                                bladeDepth=self.rotorThickness,
+                                rotorDiameter=self.outerDiameter,
+                                hubDiameter=self.hubDiameter)
 
 if __name__ == '__main__':
     from parapy.gui import display

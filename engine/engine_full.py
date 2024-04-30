@@ -17,28 +17,21 @@ from parapy.geom import *
 from parapy.core import *
 from engine.engine_nacelle import Nacelle
 from engine.engine_shaft import EngineShaft
-from engine.engine_pylon import Pylon
-from utilities.ref_frame import Frame
-
-
 
 class Engine(GeomBase):
     length = Input(3.0)
-    fan_diameter = Input(2.0)
+    fanDiameter = Input(2.0)
 
     @Part
     def nacelle(self):
         return Nacelle(length=self.length,
-                       fan_diameter=self.fan_diameter,
+                       fan_diameter=self.fanDiameter,
                        transparency=0.6)
 
     @Part
     def shaft(self):
-        return EngineShaft(shaft_length = self.length * 0.9)
+        return EngineShaft(shaftLength = self.length * 0.9)
 
-    # @Part
-    # def blank_pylon(self):
-    #     return Pylon(pass_down="length, fan_diameter")
 
 
 if __name__ == '__main__':
