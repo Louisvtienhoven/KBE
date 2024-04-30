@@ -16,13 +16,20 @@ class Wing(LoftedSolid):
     sweep_TE = Input(25.)  # sweep angle, in degrees. Defined at the wing trailing edge (TE)
     dihedral = Input(1.)
 
+    front_spar_chord_pos = Input(0.2)
+    aft_spar_chord_pos = Input(0.75)
+
 
     @Attribute
     def pts(self):
         """ Extract airfoil coordinates from a data file and create a list of 3D points"""
-        import os
-        os.chdir('../fuselage')
-        with open('./whitcomb.dat', 'r') as f:
+        if __name__ != '__main__':
+            dir = './fuselage/whitcomb.dat'
+
+        else:
+            dir = './whitcomb.dat'
+
+        with open(dir, 'r') as f:
             points = []
             for line in f:
                 x, y = line.split(' ', 1)  # separator = " "; max number of split = 1
@@ -92,6 +99,26 @@ class Wing(LoftedSolid):
             mesh_deflection=0.0001
         )
 
+    @Attribute
+    def front_spar_root_location(self):
+        return Position(translate(self.root_section_unscaled.start, 'x', (1-self.front_spar_chord_pos) * -self.w_c_root,
+                                  'z', 0.01 * self.w_c_root))
+
+    @Attribute
+    def aft_spar_root_location(self):
+        return Position(translate(self.root_section.position, 'x', (1-self.aft_spar_chord_pos) * -self.w_c_root,
+                                  'z', 0.02 * self.w_c_root))
+
+    @Attribute
+    def front_spar_tip_location(self):
+        return Position(translate(self.tip_section_unscaled.start, 'x', (1-self.front_spar_chord_pos) * -self.w_c_tip,
+                                  'z', 0.01 * self.w_c_tip))
+
+    @Attribute
+    def aft_spar_tip_location(self):
+        return Position(translate(self.tip_section.position, 'x', (1-self.aft_spar_chord_pos) * -self.w_c_tip,
+                                  'z', 0.02 * self.w_c_tip))
+
     @Part
     def tip_section(self):
         return ScaledCurve(
@@ -111,6 +138,29 @@ class Wing(LoftedSolid):
     def profiles(self):
         return [self.root_section, self.tip_section]
 
+    # @Attribute
+    # def front_spar_plane_normal(self):
+    #     return self.front_spar_tip_location - self.front_spar_root_location
+    #
+    # @Attribute
+    # def aft_spar_plane_normal(self):
+    #     return self.aft_spar_tip_location - self.aft_spar_root_location
+    #
+    # @Part
+    # def front_spar(self):
+    #     return LineSegment(start = self.front_spar_root_location.point, end = self.front_spar_tip_location.point)
+    #
+    # @Part
+    # def aft_spar(self):
+    #     return LineSegment(start = self.aft_spar_root_location.point, end = self.aft_spar_tip_location.point)
+    #
+    # @Part
+    # def front_spar_channel(self):
+    #     return PipeSolid(path=self.front_spar, radius=.07)
+    #
+    # @Part
+    # def aft_spar_channel(self):
+    #     return PipeSolid(path=self.aft_spar, radius=.07)
 
 
 if __name__ == '__main__':

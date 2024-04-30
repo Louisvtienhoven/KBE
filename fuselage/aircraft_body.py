@@ -6,13 +6,9 @@ from parapy.core import *
 from utilities.ref_frame import Frame
 from fuselage.wing import Wing
 from fuselage.fuselage_structure import Fuselage
-from fuselage.channel import ChannelX, ChannelY, ChannelZ
-
-from fuselage.EWIS import Ewis
-
-class AircraftBody (GeomBase):
 
 
+class AircraftBody(GeomBase):
     @Part
     def aircraft_frame(self):
         return Frame(pos=self.position)  # this helps visualizing the aircraft reference frame, /
@@ -37,7 +33,6 @@ class AircraftBody (GeomBase):
                              transparency = 0.5)
 
     @Part
-
     def v_tail(self):
         return Wing(position=translate(self.position.rotate90('x'),
                                        'x',41,
@@ -47,15 +42,11 @@ class AircraftBody (GeomBase):
                     dihedral = 0,
                     transparency=0.5
         )
-    @Part
-    def wiring_system(self):
-        return Ewis(position=translate(self.position, 'x'))
-
 
 
 
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = Aircraft(label="aircraft")
+    obj = AircraftBody(label="aircraft")
     display(obj)

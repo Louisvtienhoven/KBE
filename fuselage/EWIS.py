@@ -4,7 +4,6 @@ from parapy.core import *
 from fuselage.channel import ChannelY, ChannelZ, ChannelX, ChannelSweep, ChannelVtail
 
 class Ewis(GeomBase):
-
     lower_channel_zposition = Input(-1)
     upper_channel_zposition = Input(1)
     channels_ypostion = Input(1)
@@ -130,11 +129,37 @@ class Ewis(GeomBase):
                         ch_length=2.3
                         )
 
+class WingChannel(Ewis):
+    front_spar_tip_pos = Input(Position(Point(0,0,0)))
+    front_spar_root_pos = Input(Position(Point(1,0,0)))
+    aft_spar_tip_pos = Input(Position(Point(0,1,0)))
+    aft_spar_root_pos = Input(Position(Point(1,1,0)))
 
+    @Attribute
+    def front_spar_plane_normal(self):
+        return self.front_spar_tip_pos - self.front_spar_root_pos
 
+    @Attribute
+    def aft_spar_plane_normal(self):
+        return self.aft_spar_tip_pos - self.aft_spar_root_pos
 
+    @Part
+    def front_spar(self):
+        return LineSegment(start = self.front_spar_root_pos.point, end = self.front_spar_tip_pos.point)
+
+    @Part
+    def aft_spar(self):
+        return LineSegment(start = self.aft_spar_root_pos.point, end = self.aft_spar_tip_pos.point)
+
+    @Part
+    def front_spar_channel(self):
+        return PipeSolid(path=self.front_spar, radius=.07)
+
+    @Part
+    def aft_spar_channel(self):
+        return PipeSolid(path=self.aft_spar, radius=.07)
 
 if __name__ == '__main__':
     from parapy.gui import display
-    obj = Ewis()
+    obj = WingChannel()
     display(obj)
