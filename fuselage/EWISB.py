@@ -6,16 +6,16 @@ from fuselage.torus import ChannelTor
 
 class Ewis(GeomBase):
     lower_channel_zposition = Input(-1)
-    upper_channel_zposition = Input(1)
-    channels_ypostion = Input(1)
+    upper_channel_zposition = Input(1.2)
+    channels_ypostion = Input(1.1)
 
     @Part
     def fuselage_connector(self):
-        return ChannelTor(position=translate(self.position, 'x', 10, 'y', 0, 'z', -0.25))
+        return ChannelTor(position=translate(self.position, 'x', 10, 'y', 0, 'z', -0.2))
 
     @Part
     def fuselage_connector2(self):
-        return ChannelTor(position=translate(self.position, 'x', 33, 'y', 0, 'z', -0.25))
+        return ChannelTor(position=translate(self.position, 'x', 33, 'y', 0, 'z', -0.2))
 
     @Part
     def lower_channel(self):
@@ -32,7 +32,7 @@ class Ewis(GeomBase):
                              color='Blue')
     @Part
     def upper_channel(self):
-        return ChannelX(ch_radius=.1, position=translate(self.position, 'x', 5, 'y', 0, 'z', self.upper_channel_zposition), color="Blue", ch_length=35.2)
+        return ChannelX(ch_radius=.1, position=translate(self.position, 'x', 7, 'y', 0, 'z', self.upper_channel_zposition), color="Blue", ch_length=33.2)
 
 
     @Part
@@ -43,9 +43,9 @@ class Ewis(GeomBase):
     def connectorY2(self):
         return ChannelY(ch_length=self.channels_ypostion*2,ch_radius=.1, position=translate(self.position, 'x', 40, 'y', -1*self.channels_ypostion, 'z', self.upper_channel_zposition), color='Blue')
 
-    @Part
-    def connectorY3(self):
-        return ChannelY(ch_length=self.channels_ypostion*2,ch_radius=.1, position=translate(self.position, 'x', 36.5, 'y', -1*self.channels_ypostion, 'z', self.upper_channel_zposition), color='Blue')
+    # @Part
+    # def connectorY3(self):
+    #     return ChannelY(ch_length=self.channels_ypostion*2,ch_radius=.1, position=translate(self.position, 'x', 36.5, 'y', -1*self.channels_ypostion, 'z', self.upper_channel_zposition), color='Blue')
 
 
     @Part

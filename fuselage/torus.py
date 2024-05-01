@@ -9,7 +9,7 @@ class ChannelTor(GeomBase):
 
     @Part
     def torus(self):
-        return Torus(position=translate(self.position.rotate90('y')),major_radius=1.2, minor_radius=0.05,color='Blue',angle=4)
+        return Torus(position=translate(self.position.rotate90('y')),major_radius=1.45, minor_radius=0.05,color='Blue',angle=4)
 
 
 if __name__ == '__main__':

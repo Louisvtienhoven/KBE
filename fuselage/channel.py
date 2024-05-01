@@ -21,7 +21,7 @@ class ChannelX(LoftedShell):  # note the use of LoftedSolid as superclass. It me
     ch_sections = Input([100, 100, 100, 100, 100, 100, 100,])
     #: fuselage length
     #: :type: float
-    ch_length = Input(33)
+    ch_length = Input(32)
 
     direction = Input(True)
 
