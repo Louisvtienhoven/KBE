@@ -35,6 +35,18 @@ class EngineStage(GeomBase):
     def bladeSpan(self):
         return (self.outerDiameter - self.hubDiameter) / 2
 
+    @Attribute
+    def thirdDiskRadius(self):
+        return self.hubDiameter / 2 + self.bladeSpan / 3
+
+    @Attribute
+    def offAxisTranslation(self):
+        return 1/2 * self.thirdDiskRadius
+
+    @Attribute
+    def riskVolumeSize(self):
+        return sqrt(3) * self.thirdDiskRadius
+
     @Part
     def rotors(self):
         return EngineStageRotor(quantify=self.nRotors,
@@ -44,6 +56,7 @@ class EngineStage(GeomBase):
                                 bladeDepth=self.rotorThickness,
                                 rotorDiameter=self.outerDiameter,
                                 hubDiameter=self.hubDiameter)
+
 
 if __name__ == '__main__':
     from parapy.gui import display

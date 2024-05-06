@@ -63,32 +63,32 @@ class Ewis(GeomBase):
     def connectorZ4(self):
         return ChannelZ(ch_length=self.upper_channel_zposition - self.lower_channel_zposition,ch_radius=.1, position=translate(self.position, 'x', 37.7, 'y', 1, 'z', self.lower_channel_zposition), color='Blue')
 
-    @Part
-    def wing_frontspar(self):
-        return ChannelSweep(ch_radius=.07, position=translate(self.position, 'x', 17, 'y', 1, 'z', -1), color='Blue')
+    # @Part
+    # def wing_frontspar(self):
+    #     return ChannelSweep(ch_radius=.07, position=translate(self.position, 'x', 17, 'y', 1, 'z', -1), color='Blue')
+    #
+    # @Part
+    # def wing_frontspar2(self):
+    #     return MirroredShape(shape_in=self.wing_frontspar,
+    #                          reference_point=self.position,
+    #                          # Two vectors to define the mirror plane
+    #                          vector1=self.position.Vz,
+    #                          vector2=self.position.Vx,
+    #                          mesh_deflection=0.0001,
+    #                          color='Blue')
+    # @Part
+    # def wing_aftspar(self):
+    #     return ChannelSweep(ch_radius=.07, position=translate(self.position, 'x', 20.7, 'y', 1, 'z', -1.05), color='Blue',sweep_rad=1.03, dihedral=0.145, ch_length=10.5)
 
-    @Part
-    def wing_frontspar2(self):
-        return MirroredShape(shape_in=self.wing_frontspar,
-                             reference_point=self.position,
-                             # Two vectors to define the mirror plane
-                             vector1=self.position.Vz,
-                             vector2=self.position.Vx,
-                             mesh_deflection=0.0001,
-                             color='Blue')
-    @Part
-    def wing_aftspar(self):
-        return ChannelSweep(ch_radius=.07, position=translate(self.position, 'x', 20.7, 'y', 1, 'z', -1.05), color='Blue',sweep_rad=1.03, dihedral=0.145, ch_length=10.5)
-
-    @Part
-    def wing_aftspar2(self):
-        return MirroredShape(shape_in=self.wing_aftspar,
-                             reference_point=self.position,
-                             # Two vectors to define the mirror plane
-                             vector1=self.position.Vz,
-                             vector2=self.position.Vx,
-                             mesh_deflection=0.0001,
-                             color='Blue')
+    # @Part
+    # def wing_aftspar2(self):
+    #     return MirroredShape(shape_in=self.wing_aftspar,
+    #                          reference_point=self.position,
+    #                          # Two vectors to define the mirror plane
+    #                          vector1=self.position.Vz,
+    #                          vector2=self.position.Vx,
+    #                          mesh_deflection=0.0001,
+    #                          color='Blue')
 
     @Part
     def wing_connector(self):
@@ -129,7 +129,7 @@ class Ewis(GeomBase):
                         ch_length=2.3
                         )
 
-class WingChannel4(Ewis):
+class WingChannel(Ewis):
     front_spar_tip_pos = Input(Position(Point(0,0,0)))
     front_spar_root_pos = Input(Position(Point(1,0,0)))
     aft_spar_tip_pos = Input(Position(Point(0,1,0)))
@@ -145,21 +145,37 @@ class WingChannel4(Ewis):
 
     @Part
     def front_spar(self):
-        return LineSegment(start = self.front_spar_root_pos.point, end = self.front_spar_tip_pos.point)
+        return LineSegment(start = self.front_spar_root_pos.point, end = self.front_spar_tip_pos.point, hidden=True)
 
     @Part
     def aft_spar(self):
-        return LineSegment(start = self.aft_spar_root_pos.point, end = self.aft_spar_tip_pos.point)
+        return LineSegment(start = self.aft_spar_root_pos.point, end = self.aft_spar_tip_pos.point, hidden=True)
 
     @Part
-    def front_spar_channel(self):
+    def rightWingFrontSpar(self):
         return PipeSolid(path=self.front_spar, radius=.07)
 
     @Part
-    def aft_spar_channel(self):
+    def rightWingAftSpar(self):
         return PipeSolid(path=self.aft_spar, radius=.07)
+
+    @Part
+    def leftWingFrontSpar(self):
+        return MirroredShape(shape_in=self.rightWingFrontSpar,reference_point=self.position,
+                             # Two vectors to define the mirror plane
+                             vector1=self.position.Vz,
+                             vector2=self.position.Vx,
+                             mesh_deflection=0.0001)
+
+    @Part
+    def leftWingAftSpar(self):
+        return MirroredShape(shape_in=self.rightWingAftSpar, reference_point=self.position,
+                             vector1=self.position.Vz,
+                             vector2=self.position.Vx,
+                             mesh_deflection=0.0001)
+
 
 if __name__ == '__main__':
     from parapy.gui import display
-    obj = WingChannel4()
+    obj = WingChannel()
     display(obj)

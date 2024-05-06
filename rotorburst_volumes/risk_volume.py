@@ -4,9 +4,10 @@ from parapy.core import *
 from parapy.core.widgets import Dropdown
 
 class RiskVolume(GeomBase):
+    aircraftConfig = Input()
     engines = Input()
     riskVolumeHeight = Input(10.)
-    riskVolumeOrientation = Input(90.)
+    riskVolumeOrientation = Input(0.)
 
     # number_of_engines = list(range(engines.quantify))
     engineIndex = Input(0, widget=Dropdown([0, 1], labels=['Left', 'Right'], autocompute=True))
@@ -30,6 +31,16 @@ class RiskVolume(GeomBase):
     def riskVolumeWidth(self):
         return self.engineStage.bladeSpan
 
+    @Attribute
+    def orientationCorrection(self):
+        if self.aircraftConfig != True:
+            bladeOrientation = 180
+        else:
+            bladeOrientation = 90
+
+        return bladeOrientation
+
+
 
 class CWTurning(RiskVolume):
 
@@ -37,13 +48,15 @@ class CWTurning(RiskVolume):
     def riskVolumeCWTurning(self):
         return Box(quantify=self.engineStage.rotors.quantify,
                    width=self.riskVolumeHeight,
-                   length=self.engineStage.bladeSpan,
+                   length=self.engineStage.riskVolumeSize,
                    height=self.engineStage.rotorThickness,
                    position=translate(
-                       rotate(self.engineStage.position, 'z', angle = self.riskVolumeOrientation, deg=True),
-                       'y', self.engineStage.hubDiameter / 2,
+                       rotate(self.engineStage.position, 'z',
+                              angle = self.riskVolumeOrientation + self.orientationCorrection, deg=True),
+                       'y', self.engineStage.offAxisTranslation,
                    'z', child.index * self.engineStage.rotorThickness * 2),
-                   color = 'red'
+                   color = 'red',
+                   transparency=0.8
                    )
 
 class CCWTurning(RiskVolume):
@@ -52,11 +65,12 @@ class CCWTurning(RiskVolume):
     def riskVolumeCCWTurning(self):
         return Box(quantify=self.engineStage.rotors.quantify,
                    width=self.riskVolumeHeight,
-                   length=self.engineStage.bladeSpan,
+                   length=self.engineStage.riskVolumeSize,
                    height=self.engineStage.rotorThickness,
                    position=translate(
-                       rotate(self.engineStage.position, 'z', angle = self.riskVolumeOrientation, deg=True),
-                       'y', self.engineStage.hubDiameter / 2,
+                       rotate(self.engineStage.position, 'z',
+                              angle = self.riskVolumeOrientation + self.orientationCorrection, deg=True),
+                       'y', self.engineStage.offAxisTranslation,
                    'z', child.index * self.engineStage.rotorThickness * 2,
                    'y', -1 * (self.engineStage.hubDiameter + self.engineStage.bladeSpan)),
                    color = 'red'
