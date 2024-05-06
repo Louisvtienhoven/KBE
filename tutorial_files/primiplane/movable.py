@@ -8,8 +8,12 @@ class Movable(GeomBase):
     rootcrv = Input()  # root airfoil section
     tipcrv = Input()  # tip airfoil section
 
-    mov_start = Input(0.7)  #: spanwise position of movable inboard section, as % of lifting surface span
-    mov_end = Input(0.95)  #: spanwise position of movable outboard section, as % of lifting surface span
+    mov_start = Input(
+        0.7
+    )  #: spanwise position of movable inboard section, as % of lifting surface span
+    mov_end = Input(
+        0.95
+    )  #: spanwise position of movable outboard section, as % of lifting surface span
 
     h_c_fraction = Input(0.8)  # movable hing position, as % of chord
     s_c_fraction1 = Input(0.85)  # movable frontspar position, as % of chord
@@ -17,25 +21,39 @@ class Movable(GeomBase):
 
     @Attribute  # position of the rib cutting planes (defining inboard and outboard position of movable)
     def closure_rib_pln_locs(self):
-        return [self.rootcrv.location.interpolate(self.tipcrv.location, self.mov_start),
-                self.rootcrv.location.interpolate(self.tipcrv.location, self.mov_end)]
+        return [
+            self.rootcrv.location.interpolate(self.tipcrv.location, self.mov_start),
+            self.rootcrv.location.interpolate(self.tipcrv.location, self.mov_end),
+        ]
 
     @Part  # the cutting planes defining the inboard and outboard position of the movable
     def closure_rib_plns(self):
-        return Plane(quantify=2,
-                     reference=self.closure_rib_pln_locs[child.index],
-                     normal=self.position.Vy)
+        return Plane(
+            quantify=2,
+            reference=self.closure_rib_pln_locs[child.index],
+            normal=self.position.Vy,
+        )
 
     @Part
-    def closure_rib_plns_fused(self):  # generate a list of faces, on whose order it CANNOT be relied.
-        return FusedShell(shape_in=self.loft.lateral_faces[0],  # this is the skin of the lifting surface
-                          tool=self.closure_rib_plns)
+    def closure_rib_plns_fused(
+        self,
+    ):  # generate a list of faces, on whose order it CANNOT be relied.
+        return FusedShell(
+            shape_in=self.loft.lateral_faces[
+                0
+            ],  # this is the skin of the lifting surface
+            tool=self.closure_rib_plns,
+        )
 
     @Attribute  # sorting based on num of neighbours (which is a message answered by any face object)
     # Note that the sorted function has no side effect, i.e. it does not change the original list
     def wing_skin_fces_sorted(self):
-        sorted_fces_by_n_neighbours = sorted(self.closure_rib_plns_fused.faces, key=lambda face: len(face.neighbours))
-        return sorted_fces_by_n_neighbours[-1]  # sorting is in ascending order. The face with most neighbours is  /
+        sorted_fces_by_n_neighbours = sorted(
+            self.closure_rib_plns_fused.faces, key=lambda face: len(face.neighbours)
+        )
+        return sorted_fces_by_n_neighbours[
+            -1
+        ]  # sorting is in ascending order. The face with most neighbours is  /
         # thus the last one ([-1]) in the sorted list
 
     @Attribute
@@ -56,55 +74,78 @@ class Movable(GeomBase):
 
     @Part
     def hinge_pln(self):  # hinge line plane definition
-        return Plane(reference=self.le_root.interpolate(self.te_root, self.h_c_fraction),
-                     normal=cross(
-                         (self.le_root.interpolate(self.te_root, self.h_c_fraction) -
-                          self.le_tip.interpolate(self.te_tip, self.h_c_fraction)),
-                         self.loft.orientation.Vz))
+        return Plane(
+            reference=self.le_root.interpolate(self.te_root, self.h_c_fraction),
+            normal=cross(
+                (
+                    self.le_root.interpolate(self.te_root, self.h_c_fraction)
+                    - self.le_tip.interpolate(self.te_tip, self.h_c_fraction)
+                ),
+                self.loft.orientation.Vz,
+            ),
+        )
 
     @Part
     def hinge_pln_fused(self):  # notice difference with closed rib plane
         # fused. Here no extra surfaces are generated as the intersection between the plane and the sorted middle face /
         # do not form a closed boundary
-        return FusedShell(shape_in=self.wing_skin_fces_sorted,
-                          tool=self.hinge_pln)  # this results in 3 faces. The LE one and the upper and lower TE faces
+        return FusedShell(
+            shape_in=self.wing_skin_fces_sorted, tool=self.hinge_pln
+        )  # this results in 3 faces. The LE one and the upper and lower TE faces
 
     @Attribute
     def movable_skin_fcs(self):
-        sorted_fces_by_cog_x = sorted(self.hinge_pln_fused.faces, key=lambda face: face.cog.x)
-        return sorted_fces_by_cog_x[1:]  # wing leading edge excluded (i.e. all elements apart the first).
+        sorted_fces_by_cog_x = sorted(
+            self.hinge_pln_fused.faces, key=lambda face: face.cog.x
+        )
+        return sorted_fces_by_cog_x[
+            1:
+        ]  # wing leading edge excluded (i.e. all elements apart the first).
         # The two TE faces are kept because have the largest value of cog.x
 
     @Attribute  # movable spar points on root section
     def spar_pln_locs_root(self):
-        return [self.le_root.interpolate(self.te_root, self.s_c_fraction1),
-                self.le_root.interpolate(self.te_root, self.s_c_fraction2)]
+        return [
+            self.le_root.interpolate(self.te_root, self.s_c_fraction1),
+            self.le_root.interpolate(self.te_root, self.s_c_fraction2),
+        ]
 
     @Attribute  # movable spar points on tip section
     def spar_pln_locs_tip(self):
-        return [self.le_tip.interpolate(self.te_tip, self.s_c_fraction1),
-                self.le_tip.interpolate(self.te_tip, self.s_c_fraction2)]
+        return [
+            self.le_tip.interpolate(self.te_tip, self.s_c_fraction1),
+            self.le_tip.interpolate(self.te_tip, self.s_c_fraction2),
+        ]
 
     @Part
     def spar_plns(self):  # movable spar planes
-        return Plane(quantify=2,
-                     reference=self.spar_pln_locs_root[child.index],
-                     normal=cross(self.spar_pln_locs_root[child.index] - self.spar_pln_locs_tip[child.index],
-                                  self.loft.orientation.Vz))
+        return Plane(
+            quantify=2,
+            reference=self.spar_pln_locs_root[child.index],
+            normal=cross(
+                self.spar_pln_locs_root[child.index]
+                - self.spar_pln_locs_tip[child.index],
+                self.loft.orientation.Vz,
+            ),
+        )
 
     @Part
     def segmented_movable_skin_fcs(self):
-        return SkinSparSegmentation(quantify=2,  # upper and lower movable faces
-                                    spar_plns=self.spar_plns,  # 2 planes
-                                    skin_fce=self.movable_skin_fcs[child.index])  # one face at the time
+        return SkinSparSegmentation(
+            quantify=2,  # upper and lower movable faces
+            spar_plns=self.spar_plns,  # 2 planes
+            skin_fce=self.movable_skin_fcs[child.index],
+        )  # one face at the time
 
     @Attribute
     def spar_edge_pairs(self):
         # First sort edges in x direction (thus from LE to TE)
-        fce1_spar_edges_sorted_in_x = sorted(self.segmented_movable_skin_fcs[0].spar_edges,
-                                             key=lambda e: e.midpoint.x)
-        fce2_spar_edges_sorted_in_x = sorted(self.segmented_movable_skin_fcs[1].spar_edges,
-                                             key=lambda e: e.midpoint.x)
+        fce1_spar_edges_sorted_in_x = sorted(
+            self.segmented_movable_skin_fcs[0].spar_edges, key=lambda e: e.midpoint.x
+        )
+        fce2_spar_edges_sorted_in_x = sorted(
+            self.segmented_movable_skin_fcs[1].spar_edges, key=lambda e: e.midpoint.x
+        )
         # Then make sure that edge directions are the same for every edge. Otherwise, twist of
         # surfaces may occur.
         edge_pairs = []
@@ -114,9 +155,11 @@ class Movable(GeomBase):
 
     @Part
     def spar_faces(self):
-        return RuledSurface(quantify=len(self.spar_edge_pairs),
-                            curve1=self.spar_edge_pairs[child.index][0],
-                            curve2=self.spar_edge_pairs[child.index][1])
+        return RuledSurface(
+            quantify=len(self.spar_edge_pairs),
+            curve1=self.spar_edge_pairs[child.index][0],
+            curve2=self.spar_edge_pairs[child.index][1],
+        )
 
     @Attribute
     def movable_faces(self):
@@ -131,9 +174,8 @@ class Movable(GeomBase):
     @Part
     def movable_faces_comp(self):
         """Make compound for easing rotation, translation or transformation of shape. Also
-        convenient for nice visualisation. """
-        return Compound(self.movable_faces,
-                        transparency=0.3)
+        convenient for nice visualisation."""
+        return Compound(self.movable_faces, transparency=0.3)
 
 
 class SkinSparSegmentation(Base):
@@ -142,8 +184,7 @@ class SkinSparSegmentation(Base):
 
     @Part
     def spar_plns_fused(self):
-        return FusedShell(shape_in=self.skin_fce,
-                          tool=self.spar_plns)
+        return FusedShell(shape_in=self.skin_fce, tool=self.spar_plns)
 
     @Attribute
     def spar_edges(self):
@@ -151,15 +192,21 @@ class SkinSparSegmentation(Base):
 
     @Attribute
     def le_skin_fce(self):
-        sorted_fces_in_x = sorted(self.spar_plns_fused.faces, key=lambda f: f.uv_center_point.x)
+        sorted_fces_in_x = sorted(
+            self.spar_plns_fused.faces, key=lambda f: f.uv_center_point.x
+        )
         return sorted_fces_in_x[0]
 
     @Attribute
     def mainbox_skin_fce(self):
-        sorted_fces_in_x = sorted(self.spar_plns_fused.faces, key=lambda f: f.uv_center_point.x)
+        sorted_fces_in_x = sorted(
+            self.spar_plns_fused.faces, key=lambda f: f.uv_center_point.x
+        )
         return sorted_fces_in_x[1]
 
     @Attribute
     def te_skin_fce(self):
-        sorted_fces_in_x = sorted(self.spar_plns_fused.faces, key=lambda f: f.uv_center_point.x)
+        sorted_fces_in_x = sorted(
+            self.spar_plns_fused.faces, key=lambda f: f.uv_center_point.x
+        )
         return sorted_fces_in_x[-1]

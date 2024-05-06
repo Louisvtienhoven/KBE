@@ -13,7 +13,7 @@ class Engine(Base):
         """Consider engine shape as a cylinder
         :return: float
         """
-        return pi * (radius ** 2) * length
+        return pi * (radius**2) * length
 
     @Part
     def nacelle(self):
@@ -31,7 +31,8 @@ class Nacelle(Base):
         return 1.1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from parapy.gui import display
-    obj = Engine(radius = 10, length = 20, label="engine_and_nacelle")
+
+    obj = Engine(radius=10, length=20, label="engine_and_nacelle")
     display(obj)

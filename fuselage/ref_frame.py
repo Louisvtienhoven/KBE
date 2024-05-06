@@ -20,11 +20,12 @@ class Frame(GeomBase):
             start=self.pos.location,
             end=(translate(self.pos.location, self.vectors[child.index], 0.3)),
             color=self.colors[child.index],
-            line_thickness=2
+            line_thickness=2,
         )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from parapy.gui import display
+
     obj = Frame(label="reference frame")
     display(obj)

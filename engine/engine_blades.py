@@ -18,6 +18,7 @@ from parapy.core import *
 from math import *
 import numpy as np
 
+
 class EngineStageRotor(GeomBase):
     nBlades = Input(18)
     bladeSpan = Input(5)
@@ -32,21 +33,26 @@ class EngineStageRotor(GeomBase):
 
     @Attribute
     def angularSeparation(self):
-        return 2 * pi / np.array(self.nBlades) # rad
+        return 2 * pi / np.array(self.nBlades)  # rad
 
     @Part
     def blades(self):
-        return Box(quantify=self.nBlades,
-                   width=self.bladeSpan,
-                   height=self.bladeDepth,
-                   length=self.bladeBoxWidth,
-                   position=translate(rotate(self.position,'z', angle=child.index * self.angularSeparation),
-                                      'x', self.hubDiameter / 2
-                                      ),
-                   hidden=False)
+        return Box(
+            quantify=self.nBlades,
+            width=self.bladeSpan,
+            height=self.bladeDepth,
+            length=self.bladeBoxWidth,
+            position=translate(
+                rotate(self.position, "z", angle=child.index * self.angularSeparation),
+                "x",
+                self.hubDiameter / 2,
+            ),
+            hidden=False,
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from parapy.gui import display
+
     obj = EngineStageRotor()
     display(obj)

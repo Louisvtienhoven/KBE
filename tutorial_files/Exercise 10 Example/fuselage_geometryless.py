@@ -14,10 +14,11 @@ class Fuselage(Base):
         """Consider fuselage shape as a cylinder
         :return: float
         """
-        return pi * (self.radius ** 2) * self.length
+        return pi * (self.radius**2) * self.length
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from parapy.gui import display
-    obj = Fuselage(radius = 30, length = 200, label="fuselage")
+
+    obj = Fuselage(radius=30, length=200, label="fuselage")
     display(obj)

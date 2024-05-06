@@ -18,23 +18,24 @@ from parapy.core import *
 from engine.engine_nacelle import Nacelle
 from engine.engine_shaft import EngineShaft
 
+
 class Engine(GeomBase):
     length = Input(3.0)
     fanDiameter = Input(2.0)
 
     @Part
     def nacelle(self):
-        return Nacelle(length=self.length,
-                       fan_diameter=self.fanDiameter,
-                       transparency=0.6)
+        return Nacelle(
+            length=self.length, fan_diameter=self.fanDiameter, transparency=0.6
+        )
 
     @Part
     def shaft(self):
-        return EngineShaft(shaftLength = self.length * 0.9)
+        return EngineShaft(shaftLength=self.length * 0.9)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     from parapy.gui import display
+
     obj = Engine()
     display(obj)

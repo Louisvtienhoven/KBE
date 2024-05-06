@@ -82,23 +82,24 @@ class Aircraft(Base):
 
     @Part
     def fuselage(self):
-        return Fuselage(radius=self.f_radius,
-                        length=self.f_length)
+        return Fuselage(radius=self.f_radius, length=self.f_length)
 
     @Part
     def propulsion_sys(self):
-        return Engine(quantify=self.n_of_engines,
-                      radius=self.e_radius,
-                      length=self.e_length,
-                      label="engine")
+        return Engine(
+            quantify=self.n_of_engines,
+            radius=self.e_radius,
+            length=self.e_length,
+            label="engine",
+        )
 
     @Part
     def wing(self):
-        return Wing(b=self.span, c_root=self.c_root,
-                    c_tip=self.c_tip,
-                    label="main_wing")
+        return Wing(
+            b=self.span, c_root=self.c_root, c_tip=self.c_tip, label="main_wing"
+        )
 
-# this below is a method. As such, it will not be visible in the property grid /
+    # this below is a method. As such, it will not be visible in the property grid /
     # of parapy GUI. It will be treated as an internal function
 
     def lift(self, cl, v, rho):
@@ -110,7 +111,7 @@ class Aircraft(Base):
         :param float area: planform area of the wing in m^2
         :rtype: float
         """
-        return 0.5 * cl * rho * v **2 * self.wing.area
+        return 0.5 * cl * rho * v**2 * self.wing.area
 
 
 # when the module is run as the main program, the interpreter /
@@ -119,17 +120,24 @@ class Aircraft(Base):
 # on top of the imported file the following
 # __name__ = "name_of_the importing_module"
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Lift of wing at different lift coefficients
     cl_lst = [0.1, 0.3, 0.5]
-    obj = Aircraft(npax=200,
-                   f_radius=3, f_length=60,
-                   e_radius=1.5, e_length=2, n_of_engines=4,
-                   span=10.0, c_root=3, c_tip=2,
-                   label="my_aircraft")  # Instantiate aircraft object
+    obj = Aircraft(
+        npax=200,
+        f_radius=3,
+        f_length=60,
+        e_radius=1.5,
+        e_length=2,
+        n_of_engines=4,
+        span=10.0,
+        c_root=3,
+        c_tip=2,
+        label="my_aircraft",
+    )  # Instantiate aircraft object
     for cl in cl_lst:
         print(obj.lift(cl, 120, 1.225))
 
     from parapy.gui import display
-    display(obj)
 
+    display(obj)

@@ -1,5 +1,6 @@
 from parapy.core import *
 
+
 class Wing(Base):
     chord_root = input(3.0)
     chord_tip = input(2)
@@ -12,7 +13,7 @@ class Wing(Base):
     @Attribute
     def ar(self):
         """Aspect ratio"""
-        return self.span ** 2 / self.area
+        return self.span**2 / self.area
 
     @Attribute
     def taper(self):

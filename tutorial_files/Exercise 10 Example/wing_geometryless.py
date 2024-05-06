@@ -25,7 +25,7 @@ class Wing(Base):
     @Attribute
     def c_average(self):
         """Averages the root and tip chord"""
-        return (self.c_root + self.c_tip) / 2.
+        return (self.c_root + self.c_tip) / 2.0
 
     @Attribute
     def taper(self):
@@ -41,19 +41,11 @@ class Wing(Base):
     @Attribute
     def ar(self):
         """Aspect ratio"""
-        return self.b ** 2 / self.area
+        return self.b**2 / self.area
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from parapy.gui import display
 
-    obj = Wing(b=10., c_root=3.0, c_tip=2.0,
-               label="wing")
+    obj = Wing(b=10.0, c_root=3.0, c_tip=2.0, label="wing")
     display(obj)
-
-
-
-
-
-
-
