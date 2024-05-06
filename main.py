@@ -35,7 +35,7 @@ class RotorBurstAnalysis(GeomBase):
             aft_spar_root_pos=self.structures.right_wing.aft_spar_root_location,
             front_spar_tip_pos=self.structures.right_wing.front_spar_tip_location,
             aft_spar_tip_pos=self.structures.right_wing.aft_spar_tip_location,
-            color="blue",
+            color="blue"
         )
 
     @Part
@@ -53,19 +53,18 @@ class RotorBurstAnalysis(GeomBase):
     def channelShapes(self):
         channelShapes = []
         for part in self.wiring.parts:
-            if part.TOPODIM == 3:
+            if part.TOPODIM == 3: # Only work with Solids
                 channelShapes.append(part)
         return channelShapes
 
-    # TODO: make working with CW turning as well and for all stages
-    # @Part
-    # def channelInRiskZone(self):
-    #     return FusedSolid(
-    #         quantify=len(self.channelShapes),
-    #         shape_in=self.channelShapes[child.index],
-    #         tool=self.riskVolume.riskVolumeCCWTurning[0],
-    #         color="red",
-    #     )  # , keep_tool=True, color='red')
+    @Part
+    def channelInRiskZone(self):
+        return FusedSolid(
+            quantify=len(self.channelShapes),
+            shape_in=self.channelShapes[child.index],
+            tool=self.riskVolume.riskVolume_shell,
+            color="red",
+        )  # , keep_tool=True, color='red')
 
 
 if __name__ == "__main__":

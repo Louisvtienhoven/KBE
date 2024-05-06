@@ -4,7 +4,7 @@ from math import *
 
 
 class ChannelX(
-    LoftedShell
+    LoftedSolid
 ):  # note the use of LoftedSolid as superclass. It means that every Fuselage instance /
     # can generated lofts. A required input for LoftedSolid is a list of profiles, thereby either /
     # an @Attribute or a @Part sequence called "profiles" must be present in the body of the class. /
@@ -14,6 +14,7 @@ class ChannelX(
 
     #: fuselage radius
     #: :type: float
+    transparency = 0.6
     ch_radius = Input(0.1)
     #: fuselage sections
     #: :type: collections.Sequence[float]
@@ -78,7 +79,7 @@ class ChannelX(
 
 
 class ChannelY(
-    LoftedShell
+    LoftedSolid
 ):  # note the use of LoftedSolid as superclass. It means that every Fuselage instance /
     # can generated lofts. A required input for LoftedSolid is a list of profiles, thereby either /
     # an @Attribute or a @Part sequence called "profiles" must be present in the body of the class. /
@@ -88,6 +89,7 @@ class ChannelY(
 
     #: fuselage radius
     #: :type: float
+    transparency = 0.6
     ch_radius = Input(0.1)
     #: fuselage sections
     #: :type: collections.Sequence[float]
@@ -146,7 +148,7 @@ class ChannelY(
 
 
 class ChannelZ(
-    LoftedShell
+    LoftedSolid
 ):  # note the use of LoftedSolid as superclass. It means that every Fuselage instance /
     # can generated lofts. A required input for LoftedSolid is a list of profiles, thereby either /
     # an @Attribute or a @Part sequence called "profiles" must be present in the body of the class. /
@@ -173,6 +175,7 @@ class ChannelZ(
     #: fuselage length
     #: :type: float
     ch_length = Input(2.0)
+    transparency = 0.6
 
     # #positioning
     # ch_position_x = Input(1)
@@ -288,7 +291,7 @@ class ChannelSweep(
 
 
 class ChannelVtail(
-    LoftedShell
+    LoftedSolid
 ):  # note the use of LoftedSolid as superclass. It means that every Fuselage instance /
     # can generated lofts. A required input for LoftedSolid is a list of profiles, thereby either /
     # an @Attribute or a @Part sequence called "profiles" must be present in the body of the class. /
@@ -315,6 +318,7 @@ class ChannelVtail(
     #: fuselage length
     #: :type: float
     ch_length = Input(12)
+    transparency = 0.6
 
     # sweep_deg = 36.
     # sweep_rad = sweep_deg * (pi / 180)

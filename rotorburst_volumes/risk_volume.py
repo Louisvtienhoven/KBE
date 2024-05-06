@@ -75,8 +75,8 @@ class RiskVolume(GeomBase):
         )
 
     @Part
-    def RiskZone(self):
-        return LoftedShell(
+    def riskVolume_shell(self):
+        return LoftedSolid(
             profiles=[self.riskVolumePlane, self.riskVolumeSpread],
             color="red",
             transparency=0.8,
