@@ -2,11 +2,11 @@ import numpy as np
 from parapy.geom import *
 from parapy.core import *
 from parapy.core.widgets import Dropdown
-from numpy import tan
 
 
 class RiskVolume(GeomBase):
     aircraftConfig = Input()
+    rotationDirection = Input()
     engines = Input()
     riskVolumeHeight = Input(10.0)
     riskVolumeOrientation = Input(0.0)
@@ -40,18 +40,28 @@ class RiskVolume(GeomBase):
     @Attribute
     def orientationCorrection(self):
         if self.aircraftConfig != True:
-            bladeOrientation = 180
+            bladeOrientation = 0
         else:
             bladeOrientation = 90
 
         return bladeOrientation
+
+    @Attribute
+    def riskVolumePosition(self):
+        return Position(self.engineStage.position,
+                        orientation=Orientation(x=Vector(1,0,0),y=Vector(0,1,0),z=Vector(0,0,1)))
 
     @Part
     def riskVolumePlane(self):
         return Rectangle(
             width=self.engineStage.stageThickness,
             length=self.engineStage.riskVolumeSize,
-            position=self.position,
+            position=translate(rotate(self.riskVolumePosition,
+                            'x', angle = self.riskVolumeOrientation, deg=True),
+                               'x', self.engineStage.stageThickness / 2,
+                            'y', self.engineStage.offAxisTranslation - self.engineStage.riskVolumeSize / 2,
+                            'y', -2**self.rotationDirection * self.rotationDirection *
+                               (self.engineStage.offAxisTranslation - self.engineStage.riskVolumeSize / 2))
         )
 
     @Part
@@ -60,112 +70,14 @@ class RiskVolume(GeomBase):
             width=self.engineStage.stageThickness
             + 2 * np.tan(np.deg2rad(self.spreadAngle)) * self.riskVolumeHeight,
             length=self.engineStage.riskVolumeSize,
-            position=translate(self.position, "z", self.riskVolumeHeight),
+            position=translate(self.riskVolumePlane.position,
+                               "z", self.riskVolumeHeight)
         )
 
-
-class CWTurning(RiskVolume):
     @Part
-    def testRiskVolume(self):
+    def RiskZone(self):
         return LoftedShell(
             profiles=[self.riskVolumePlane, self.riskVolumeSpread],
-            position=translate(
-                rotate(
-                    self.engineStage.position,
-                    "z",
-                    angle=self.riskVolumeOrientation + self.orientationCorrection,
-                    deg=True,
-                ),
-                "y",
-                -1
-                * (
-                    self.engineStage.riskVolumeSize
-                    - self.engineStage.offAxisTranslation
-                ),
-                "z",
-                child.index * self.engineStage.rotorThickness * 2,
-            ),
             color="red",
             transparency=0.8,
         )
-
-    @Part
-    def riskVolumeCWTurning(self):
-        return Box(
-            quantify=self.engineStage.rotors.quantify,
-            width=self.riskVolumeHeight,
-            length=self.engineStage.riskVolumeSize,
-            height=self.engineStage.rotorThickness,
-            position=translate(
-                rotate(
-                    self.engineStage.position,
-                    "z",
-                    angle=self.riskVolumeOrientation + self.orientationCorrection,
-                    deg=True,
-                ),
-                "y",
-                -1
-                * (
-                    self.engineStage.riskVolumeSize
-                    - self.engineStage.offAxisTranslation
-                ),
-                "z",
-                child.index * self.engineStage.rotorThickness * 2,
-            ),
-            color="red",
-            transparency=0.8,
-        )
-
-
-class CCWTurning(RiskVolume):
-    @Part
-    def testRiskVolume(self):
-        return LoftedShell(
-            profiles=[self.riskVolumePlane, self.riskVolumeSpread],
-            position=translate(
-                rotate(
-                    self.engineStage.position,
-                    "z",
-                    angle=self.riskVolumeOrientation + self.orientationCorrection,
-                    deg=True,
-                ),
-                "y",
-                -1 * (self.engineStage.offAxisTranslation),
-            ),
-            color="red",
-            transparency=0.8,
-        )
-
-    @Part
-    def riskVolumeCCWTurning(self):
-        return Box(
-            width=self.riskVolumeHeight,
-            length=self.engineStage.riskVolumeSize,
-            height=self.engineStage.rotorThickness,
-            position=translate(
-                rotate(
-                    self.engineStage.position,
-                    "z",
-                    angle=self.riskVolumeOrientation + self.orientationCorrection,
-                    deg=True,
-                ),
-                "y",
-                -1 * (self.engineStage.offAxisTranslation),
-            ),
-            color="red",
-        )
-
-    # @Part
-    # def riskVolumeCCWTurning(self):
-    #     return Box(quantify=self.engineStage.rotors.quantify,
-    #                width=self.riskVolumeHeight,
-    #                length=self.engineStage.riskVolumeSize,
-    #                height=self.engineStage.rotorThickness,
-    #                position=translate(
-    #                    rotate(self.engineStage.position, 'z',
-    #                           angle = self.riskVolumeOrientation + self.orientationCorrection, deg=True),
-    #                    'y', self.engineStage.offAxisTranslation,
-    #                'z', child.index * self.engineStage.rotorThickness * 2,
-    #                'y', -1 * (self.engineStage.hubDiameter + self.engineStage.bladeSpan)),
-    #                color = 'red'
-    #                )

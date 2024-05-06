@@ -7,7 +7,7 @@ from assembly.config_conv import WingMounted
 from fuselage.aircraft_body import AircraftBody
 
 from fuselage.EWIS import WingChannel
-from rotorburst_volumes.risk_volume import CWTurning, CCWTurning
+from rotorburst_volumes.risk_volume import RiskVolume
 
 
 class RotorBurstAnalysis(GeomBase):
@@ -16,7 +16,7 @@ class RotorBurstAnalysis(GeomBase):
         widget=Dropdown([True, False], labels=["Wing Mounted", "Fuselage Mounted"]),
     )
 
-    rotationDirection = Input(1, widget=Dropdown([0, 1], labels=["CW", "CCW"]))
+    rotationDirection = Input(0, widget=Dropdown([1, 0], labels=["CW", "CCW"]))
 
     @Part
     def configuration(self):
@@ -44,10 +44,9 @@ class RotorBurstAnalysis(GeomBase):
 
     @Part
     def riskVolume(self):
-        return DynamicType(
-            type=CWTurning if self.rotationDirection == 0 else CCWTurning,
+        return RiskVolume(
             engines=self.engines,
-            pass_down="aircraftConfig",
+            pass_down="aircraftConfig, rotationDirection",
         )
 
     @Attribute
@@ -59,14 +58,14 @@ class RotorBurstAnalysis(GeomBase):
         return channelShapes
 
     # TODO: make working with CW turning as well and for all stages
-    @Part
-    def channelInRiskZone(self):
-        return FusedSolid(
-            quantify=len(self.channelShapes),
-            shape_in=self.channelShapes[child.index],
-            tool=self.riskVolume.riskVolumeCCWTurning[0],
-            color="red",
-        )  # , keep_tool=True, color='red')
+    # @Part
+    # def channelInRiskZone(self):
+    #     return FusedSolid(
+    #         quantify=len(self.channelShapes),
+    #         shape_in=self.channelShapes[child.index],
+    #         tool=self.riskVolume.riskVolumeCCWTurning[0],
+    #         color="red",
+    #     )  # , keep_tool=True, color='red')
 
 
 if __name__ == "__main__":
