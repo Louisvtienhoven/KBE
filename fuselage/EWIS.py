@@ -249,14 +249,26 @@ class WingChannel(Ewis):
 
     @Attribute
     def front_spar_plane_normal(self):
+        """
+        Create a vector from the root to the tip position of the front spar
+        :return: GeomBase.Vector
+        """
         return self.front_spar_tip_pos - self.front_spar_root_pos
 
     @Attribute
     def aft_spar_plane_normal(self):
+        """
+        Create a vector from the root to the tip position of the aft spar
+        :return: GeomBase.Vector
+        """
         return self.aft_spar_tip_pos - self.aft_spar_root_pos
 
     @Part
     def front_spar(self):
+        """
+        Model the front spar as a line segment
+        :return: GeomBase.LineSegment
+        """
         return LineSegment(
             start=self.front_spar_root_pos.point,
             end=self.front_spar_tip_pos.point,
@@ -265,6 +277,10 @@ class WingChannel(Ewis):
 
     @Part
     def aft_spar(self):
+        """
+        Model the aft spar as a line segment
+        :return: GeomBase.LineSegment
+        """
         return LineSegment(
             start=self.aft_spar_root_pos.point,
             end=self.aft_spar_tip_pos.point,
@@ -272,7 +288,11 @@ class WingChannel(Ewis):
         )
 
     @Part
-    def rightWingFrontSpar(self):
+    def right_wing_front_spar(self):
+        """
+        Model the channel of the front spar as a PipeSolid
+        :return:
+        """
         return PipeSolid(path=self.front_spar, radius=0.07)
 
     @Part
@@ -282,7 +302,7 @@ class WingChannel(Ewis):
     @Part
     def leftWingFrontSpar(self):
         return MirroredShape(
-            shape_in=self.rightWingFrontSpar,
+            shape_in=self.right_wing_front_spar,
             reference_point=self.position,
             # Two vectors to define the mirror plane
             vector1=self.position.Vz,

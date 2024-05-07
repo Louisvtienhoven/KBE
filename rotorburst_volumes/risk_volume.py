@@ -5,20 +5,28 @@ from parapy.core.widgets import Dropdown
 
 
 class RiskVolume(GeomBase):
-    aircraftConfig = Input()
-    rotationDirection = Input()
+    aircraft_config = Input()
     engines = Input()
-    riskVolumeHeight = Input(10.0)
-    riskVolumeOrientation = Input(0.0)
-    spreadAngle = Input(5.0)
 
-    # number_of_engines = list(range(engines.quantify))
-    engineIndex = Input(
+    # rotation direction of the engine (clockwise or counter clockwise)
+    rotation_direction = Input(0, widget=Dropdown([1, 0], labels=["CW", "CCW"]))
+
+    # height of the risk volume from start to end plane
+    risk_volume_height = Input(10.0)
+
+    # orientation of the risk volume with 0-deg along the +z axis
+    risk_volume_orientation = Input(0.0)
+
+    # angle at which the risk volume spreads as it propagates
+    spread_angle = Input(5.0)
+
+    # the index of the engine of interest, either "Left" (0) or "Right" (0)
+    engine_index = Input(
         0, widget=Dropdown([0, 1], labels=["Left", "Right"], autocompute=True)
     )
 
-    # number_of_stages = list(range(engines[0].shaft.stages.quantify))
-    engineStageIndex = Input(
+    # the index of the stage of interest of the engine
+    engine_stage_index = Input(
         0,
         widget=Dropdown(
             [0, 1, 2, 3, 4], labels=["Fan", "LP-comp", "HP-comp", "HP-turb", "LP-turb"]
@@ -26,58 +34,67 @@ class RiskVolume(GeomBase):
     )
 
     @Attribute
-    def engineShaftLocation(self):
-        return self.engines[self.engineIndex].position
+    def engine_stage(self):
+        """
+        Select which engine of the model is used as the base for the rotor burst analysis
+        :return: Engine object
+        """
+        return self.engines[self.engine_index].shaft.stages[self.engine_stage_index]
+
 
     @Attribute
-    def engineStage(self):
-        return self.engines[self.engineIndex].shaft.stages[self.engineStageIndex]
-
-    @Attribute
-    def riskVolumeLength(self):
-        return self.engineStage.rotorThickness
-
-    @Attribute
-    def orientationCorrection(self):
-        if self.aircraftConfig != True:
-            bladeOrientation = 0
-        else:
-            bladeOrientation = 90
-
-        return bladeOrientation
-
-    @Attribute
-    def riskVolumePosition(self):
-        return Position(self.engineStage.position,
+    def risk_volume_position(self):
+        """
+        Determine the position of the risk volume based on the corresponding engine stage.
+        The orientation of the risk volume aligns with the reference system in the GUI with an orientation of
+        0 deg upwards, in accordance with CS25
+        :return: GeomBase.Position object
+        """
+        return Position(self.engine_stage.position,
                         orientation=Orientation(x=Vector(1,0,0),y=Vector(0,1,0),z=Vector(0,0,1)))
 
     @Part
-    def riskVolumePlane(self):
+    def risk_volume_plane(self):
+        """
+        The start plane of the risk volume, corresponding to the engine stage that is analysed. The normal of the plane
+        is in the positive z-direction. The Position of the plane is translated to comply with the centroid of a
+        third-disk fragment, in compliance with CS25
+        :return: GeomBase.Rectangle
+        """
         return Rectangle(
-            width=self.engineStage.stageThickness,
-            length=self.engineStage.riskVolumeSize,
-            position=translate(rotate(self.riskVolumePosition,
-                            'x', angle = self.riskVolumeOrientation, deg=True),
-                               'x', self.engineStage.stageThickness / 2,
-                            'y', self.engineStage.offAxisTranslation - self.engineStage.riskVolumeSize / 2,
-                            'y', -2**self.rotationDirection * self.rotationDirection *
-                               (self.engineStage.offAxisTranslation - self.engineStage.riskVolumeSize / 2))
+            width=self.engine_stage.stageThickness,
+            length=self.engine_stage.risk_volume_size,
+            position=translate(rotate(self.risk_volume_position,
+                            'x', angle = self.risk_volume_orientation, deg=True),
+                               'x', self.engine_stage.stageThickness / 2,
+                            'y', self.engine_stage.offAxisTranslation - self.engine_stage.risk_volume_size / 2,
+                            'y', -2**self.rotation_direction * self.rotation_direction *
+                               (self.engine_stage.offAxisTranslation - self.engine_stage.risk_volume_size / 2))
         )
 
     @Part
-    def riskVolumeSpread(self):
+    def risk_volume_spread_plane(self):
+        """
+        The spread angle of the risk volume from the engine stage outwards. A default of +/- 5 deg has been selected.
+        With this spread angle, the plane at a predetermined offset form [risk_volume_plane] is defined.
+        :return: GeomBase.Rectangle
+        """
         return Rectangle(
-            width=self.engineStage.stageThickness
-            + 2 * np.tan(np.deg2rad(self.spreadAngle)) * self.riskVolumeHeight,
-            length=self.engineStage.riskVolumeSize,
-            position=translate(self.riskVolumePlane.position,
-                               "z", self.riskVolumeHeight)
+            width=self.engine_stage.stageThickness
+                  + 2 * np.tan(np.deg2rad(self.spread_angle)) * self.risk_volume_height,
+            length=self.engine_stage.risk_volume_size,
+            position=translate(self.risk_volume_plane.position,
+                               "z", self.risk_volume_height)
         )
 
     @Part
-    def riskVolume_shell(self):
+    def risk_volume_shell(self):
+        """
+        Lofted shell to visualise the risk zone per stage of interest per engine of interest
+        :return: GeomBase.LoftedSolid
+        """
         return LoftedSolid(
-            profiles=[self.riskVolumePlane, self.riskVolumeSpread],
+            profiles=[self.risk_volume_plane, self.risk_volume_spread_plane],
             color="red",
             transparency=0.8,
         )

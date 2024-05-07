@@ -73,11 +73,11 @@ class RiskVolume(GeomBase):
 
     @Attribute
     def risk_volume_length(self):
-        return self.engine_stage.rotorThickness
+        return self.engine_stage.rotor_thickness
 
     @Attribute
     def risk_volume_width(self):
-        return self.engine_stage.bladeSpan
+        return self.engine_stage.blade_span
 
     @Attribute
     def risk_volume_position(self):

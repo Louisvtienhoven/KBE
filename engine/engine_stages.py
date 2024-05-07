@@ -30,49 +30,68 @@ class EngineStage(GeomBase):
     rotorIndex = Input(0)
 
     @Attribute
-    def rotorThickness(self):
+    def rotor_thickness(self):
+        """
+        The axial dimension of a rotor element of an engine stage
+        :return: float
+        """
         return self.stageThickness / (self.nRotors * 2)
 
     @Attribute
-    def bladeSpan(self):
+    def blade_span(self):
+        """
+        Calculate the span of a blade element of a rotor
+        :return:
+        """
         return (self.outerDiameter - self.hubDiameter) / 2
 
     @Attribute
-    def fragmentSize(self):
-        if self.rotorIndex != 0:
-            fragmentSize = self.hubDiameter / 2 + self.bladeSpan / 3
-        else:
-            fragmentSize = self.bladeSpan
-        return fragmentSize
-
-    @Attribute
     def offAxisTranslation(self):
+        """
+        Determine the location of the loci of the c.g. of the risk volume per engine stage. This location affects
+        the translation of the risk volume in an radial direction of the engine shaft.
+        :return:
+        """
         if self.rotorIndex != 0:
-            translation = 1 / 2 * self.fragmentSize
+            # translation for third-rotor fragment
+            translation = 1 / 2 * self.fragment_size
         else:
+            # translation for fan blade fragment
             translation = (
-                self.fragmentSize * (2 / 3 - 1 / 2) + self.hubDiameter / 2
+                                  self.fragment_size * (2 / 3 - 1 / 2) + self.hubDiameter / 2
             ) * -1
         return translation
 
     @Attribute
-    def riskVolumeSize(self):
+    def risk_volume_size(self):
+        """
+        Determine the size of the risk volume in radial direction corresponding to CS25
+        :return:
+        """
         if self.rotorIndex != 0:
-            riskVolumeSize = sqrt(3) * self.fragmentSize
+            # fan blade fragment
+            fragment_size = self.hubDiameter / 2 + self.blade_span / 3
+            riskVolumeSize = sqrt(3) * fragment_size
         else:
-            riskVolumeSize = self.fragmentSize
+            # third-rotor fragment
+            fragment_size = self.blade_span
+            riskVolumeSize = fragment_size
         return riskVolumeSize
 
     @Part
     def rotors(self):
+        """
+        Model the rotors of each engine stage
+        :return: EngineStageRotor object
+        """
         return EngineStageRotor(
             quantify=self.nRotors,
             position=translate(
-                self.position, "z", (self.rotorThickness * 2) * child.index
+                self.position, "z", (self.rotor_thickness * 2) * child.index
             ),
             nBlades=self.nBladesPerRotor,
-            bladeSpan=self.bladeSpan,
-            bladeDepth=self.rotorThickness,
+            bladeSpan=self.blade_span,
+            bladeDepth=self.rotor_thickness,
             rotorDiameter=self.outerDiameter,
             hubDiameter=self.hubDiameter,
         )

@@ -18,6 +18,7 @@ class WingMounted(GeomBase):
     def engine(self):
         return Engine(
             quantify=2,
+            label=["left", "right"][child.index],
             position=translate(
                 self.position.rotate90("y", "z"),
                 "x",

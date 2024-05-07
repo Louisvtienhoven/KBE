@@ -11,25 +11,32 @@ from rotorburst_volumes.risk_volume import RiskVolume
 
 
 class RotorBurstAnalysis(GeomBase):
-    aircraftConfig = Input(
+    # the configuration of the aircraft: wing mounted or fuselage mounted engines
+    aircraft_config = Input(
         True,
         widget=Dropdown([True, False], labels=["Wing Mounted", "Fuselage Mounted"]),
     )
 
-    rotationDirection = Input(0, widget=Dropdown([1, 0], labels=["CW", "CCW"]))
+    @Input
+    def test(self):
+        return self.aircraft_config
 
     @Part
     def configuration(self):
+        """
+        The configuration of the aircraft based on [aircraft_config]
+        :return: WingMounted or FuselageMounted objects with corresponding empenage layout and engine placement
+        """
         return DynamicType(
-            type=WingMounted if self.aircraftConfig == True else FuselageMounted
+            type=WingMounted if self.aircraft_config == True else FuselageMounted
         )
-
-    @Attribute
-    def engines(self):
-        return self.configuration.engine
 
     @Part
     def wiring(self):
+        """
+        The layout of the channels in both the wing and fuselage
+        :return: GeomBase.Ewis object
+        """
         return WingChannel(
             front_spar_root_pos=self.structures.right_wing.front_spar_root_location,
             aft_spar_root_pos=self.structures.right_wing.aft_spar_root_location,
@@ -40,17 +47,30 @@ class RotorBurstAnalysis(GeomBase):
 
     @Part
     def structures(self):
+        """
+        The fuselage, wing and vertical tail models
+        :return: GeomBase.AircraftBody object
+        """
         return AircraftBody()
 
     @Part
-    def riskVolume(self):
+    def risk_volume(self):
+        """
+        The risk volumes based on the stage of the engine of interest. The orientation of the risk volume can be modified
+        by the user
+        :return: GeomBase.RiskVolume object
+        """
         return RiskVolume(
-            engines=self.engines,
-            pass_down="aircraftConfig, rotationDirection",
+            engines=self.configuration.engine,
+            pass_down="aircraftConfig",
         )
 
     @Attribute
-    def channelShapes(self):
+    def channel_shapes(self):
+        """
+        Creates a list of all the shapes in [self.wiring] which can be used to determine intersection with a risk volume
+        :return: list
+        """
         channelShapes = []
         for part in self.wiring.parts:
             if part.TOPODIM == 3: # Only work with Solids
@@ -58,11 +78,16 @@ class RotorBurstAnalysis(GeomBase):
         return channelShapes
 
     @Part
-    def channelInRiskZone(self):
+    def channel_in_risk_zone(self):
+        """
+        Create fused solids for the shapes in [channel_shapes] that intersect with a risk volume at the determined
+        orientation corresponding to a stage of an engine
+        :return: GeomBase.FusedSolid
+        """
         return FusedSolid(
-            quantify=len(self.channelShapes),
-            shape_in=self.channelShapes[child.index],
-            tool=self.riskVolume.riskVolume_shell,
+            quantify=len(self.channel_shapes),
+            shape_in=self.channel_shapes[child.index],
+            tool=self.risk_volume.risk_volume_shell,
             color="red",
         )  # , keep_tool=True, color='red')
 

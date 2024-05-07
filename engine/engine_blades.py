@@ -47,7 +47,7 @@ class EngineStageRotor(GeomBase):
                 "x",
                 self.hubDiameter / 2,
             ),
-            hidden=False,
+            hidden=True,
         )
 
 

@@ -40,19 +40,19 @@ class RiskVolumePerStage(GeomBase):
 
     @Attribute
     def risk_volume_length(self):
-        return self.engine_stage.rotorThickness
+        return self.engine_stage.rotor_thickness
 
     @Attribute
     def risk_volume_width(self):
-        return self.engine_stage.bladeSpan
+        return self.engine_stage.blade_span
 
     @Part
     def risk_volume_CW_turning(self):
         return Box(
             quantify=self.engine_stage.rotors.quantify,
             width=self.risk_volume_height,
-            length=self.engine_stage.bladeSpan,
-            height=self.engine_stage.rotorThickness,
+            length=self.engine_stage.blade_span,
+            height=self.engine_stage.rotor_thickness,
             position=translate(
                 rotate(
                     self.engine_stage.position,
@@ -63,7 +63,7 @@ class RiskVolumePerStage(GeomBase):
                 "y",
                 self.engine_stage.hubDiameter / 2,
                 "z",
-                child.index * self.engine_stage.rotorThickness * 2,
+                child.index * self.engine_stage.rotor_thickness * 2,
             ),
             color="red",
         )
@@ -73,8 +73,8 @@ class RiskVolumePerStage(GeomBase):
         return Box(
             quantify=self.engine_stage.rotors.quantify,
             width=self.risk_volume_height,
-            length=self.engine_stage.bladeSpan,
-            height=self.engine_stage.rotorThickness,
+            length=self.engine_stage.blade_span,
+            height=self.engine_stage.rotor_thickness,
             position=translate(
                 rotate(
                     translate(self.engine_stage.position, "x", self.risk_volume_height),
@@ -85,7 +85,7 @@ class RiskVolumePerStage(GeomBase):
                 "y",
                 self.engine_stage.hubDiameter / 2,
                 "z",
-                child.index * self.engine_stage.rotorThickness * 2,
+                child.index * self.engine_stage.rotor_thickness * 2,
             ),
             color="red",
         )
