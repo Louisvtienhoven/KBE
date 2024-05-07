@@ -41,7 +41,7 @@ class Ewis(GeomBase):
 
     @Part
     def connectorY2(self):
-        return ChannelY(ch_length=self.channels_ypostion*2,ch_radius=.1, position=translate(self.position, 'x', 40, 'y', -1*self.channels_ypostion, 'z', self.upper_channel_zposition), color='Blue')
+        return ChannelY(ch_length=2,ch_radius=.04, position=translate(self.position, 'x', 40, 'y', -1*self.channels_ypostion, 'z', self.upper_channel_zposition), color='Blue')
 
     # @Part
     # def connectorY3(self):
