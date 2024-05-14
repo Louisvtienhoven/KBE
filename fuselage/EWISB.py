@@ -231,3 +231,11 @@ if __name__ == "__main__":
 
     obj = WingChannel3()
     display(obj)
+
+
+
+
+
+
+
+

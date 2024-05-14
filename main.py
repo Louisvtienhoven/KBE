@@ -7,7 +7,8 @@ from assembly.config_t_tail import FuselageMounted
 from assembly.config_conv import WingMounted
 from fuselage.aircraft_body import AircraftBody
 
-from fuselage.EWIS import WingChannel
+from fuselage.EWIS import WingChannel4
+from fuselage.EWISB import WingChannel3
 from rotorburst_volumes.evaluate_risk_zones import RiskVolumeAnalysis
 
 # import matlab.engine
@@ -21,6 +22,11 @@ class MainAssembly(GeomBase):
         widget=Dropdown([True, False], labels=["Wing Mounted", "Fuselage Mounted"]),
     )
 
+    wiringConfig = Input(
+        True,
+        widget=Dropdown([True, False], labels=["3 Channel Option", "4 Channel Option"]),
+    )
+
     @Part
     def configuration(self):
         """
@@ -31,19 +37,23 @@ class MainAssembly(GeomBase):
             type=WingMounted if self.aircraft_config == True else FuselageMounted
         )
 
+    # @Part
+    # def wiring(self):
+    #     """
+    #     The layout of the channels in both the wing and fuselage
+    #     :return: GeomBase.Ewis object
+    #     """
+    #     return WingChannel(
+    #         front_spar_root_pos=self.structures.right_wing.front_spar_root_location,
+    #         aft_spar_root_pos=self.structures.right_wing.aft_spar_root_location,
+    #         front_spar_tip_pos=self.structures.right_wing.front_spar_tip_location,
+    #         aft_spar_tip_pos=self.structures.right_wing.aft_spar_tip_location,
+    #         color="blue",
+    #     )
+
     @Part
-    def wiring(self):
-        """
-        The layout of the channels in both the wing and fuselage
-        :return: GeomBase.Ewis object
-        """
-        return WingChannel(
-            front_spar_root_pos=self.structures.right_wing.front_spar_root_location,
-            aft_spar_root_pos=self.structures.right_wing.aft_spar_root_location,
-            front_spar_tip_pos=self.structures.right_wing.front_spar_tip_location,
-            aft_spar_tip_pos=self.structures.right_wing.aft_spar_tip_location,
-            color="blue",
-        )
+    def wiring_configuration(self):
+        return DynamicType(type=WingChannel3 if self.wiringConfig == True else WingChannel4)
 
     @Part
     def structures(self):
