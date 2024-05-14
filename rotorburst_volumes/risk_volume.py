@@ -9,7 +9,7 @@ class RiskVolume(GeomBase):
     engines = Input()
 
     # rotation direction of the engine (clockwise or counter clockwise)
-    rotation_direction = Input(0, widget=Dropdown([1, 0], labels=["CW", "CCW"]))
+    rotation_direction = Input()#0, widget=Dropdown([1, 0], labels=["CW", "CCW"]))
 
     # height of the risk volume from start to end plane
     risk_volume_height = Input(10.0)
@@ -18,20 +18,20 @@ class RiskVolume(GeomBase):
     risk_volume_orientation = Input(0.0)
 
     # angle at which the risk volume spreads as it propagates
-    spread_angle = Input(5.0)
+    spread_angle = Input()#5.0)
 
     # the index of the engine of interest, either "Left" (0) or "Right" (0)
-    engine_index = Input(
-        0, widget=Dropdown([0, 1], labels=["Left", "Right"], autocompute=True)
-    )
+    engine_index = Input()#
+        #0, widget=Dropdown([0, 1], labels=["Left", "Right"], autocompute=True)
+    #)
 
     # the index of the stage of interest of the engine
-    engine_stage_index = Input(
-        0,
-        widget=Dropdown(
-            [0, 1, 2, 3, 4], labels=["Fan", "LP-comp", "HP-comp", "HP-turb", "LP-turb"]
-        ),
-    )
+    engine_stage_index = Input()#
+        #0,
+        #widget=Dropdown(
+            #[0, 1, 2, 3, 4], labels=["Fan", "LP-comp", "HP-comp", "HP-turb", "LP-turb"]
+        #),
+    #)
 
     @Attribute
     def engine_stage(self):

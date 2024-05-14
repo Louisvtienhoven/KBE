@@ -25,13 +25,12 @@ class EngineShaft(GeomBase):
     nStages = Input(5)
     shaftLength = Input(3.0)  # m
 
+    stages_outer_diameter = Input([2.0, 0.8, 0.6, 1.0, 1.2])
+    stages_hub_diameter = Input([0.5, 0.6, 0.4, 0.5, 0.5])
+    stages_start_point = Input([0, 0.2, 0.4, 0.7, 0.8])
 
-    stagesOuterDiameters = Input([2.0, 0.8, 0.6, 1.0, 1.2])
-    stagesHubDiameters = Input([0.5, 0.6, 0.4, 0.5, 0.5])
-    stagesStartPoint = Input([0, 0.2, 0.4, 0.7, 0.8])
-
-    rotorsPerStage = Input([1, 3, 7, 2, 7])
-    bladesPerRotor = Input([18, 100, 100, 100, 100])
+    rotors_per_stage = Input([1, 3, 7, 2, 7])
+    blades_per_rotor = Input([18, 100, 100, 100, 100])
 
     transparency = Input(0.7)
 
@@ -41,7 +40,7 @@ class EngineShaft(GeomBase):
         Determine the thickness of the stages of the engine in axial direction
         :return: list containing the axial thickness of each engine stage
         """
-        return list(np.diff(np.append(self.stagesStartPoint, 1)) * self.shaftLength)
+        return list(np.diff(np.append(self.stages_start_point, 1)) * self.shaftLength)
 
     @Part
     def shaft_frame(self):
@@ -52,59 +51,59 @@ class EngineShaft(GeomBase):
         return Frame(pos=self.position)
 
     @Part
-    def centerShaft(self):
+    def center_shaft(self):
         return Cylinder(
-            radius=min(self.stagesHubDiameters) / 2,
+            radius=min(self.stages_hub_diameter) / 2,
             height=self.shaftLength,
             centered=False,
         )
 
     @Part
-    def outerStageDisks(self):
+    def outer_stage_disks(self):
         """
         Disks based on the outer dimensions of the stages of the engine
         :return: sequence of GeomBase.Cylinder
         """
         return Cylinder(
             quantify=self.nStages,
-            radius=self.stagesOuterDiameters[child.index] / 2,
+            radius=self.stages_outer_diameter[child.index] / 2,
             position=translate(
                 self.position,
                 "z",
-                self.stagesStartPoint[child.index] * self.shaftLength,
+                self.stages_start_point[child.index] * self.shaftLength,
             ),
             height=self.stages_thickness[child.index],
             hidden=True,
         )
 
     @Part
-    def innerStageDisks(self):
+    def inner_stage_disks(self):
         """
         Disks based on the size of the hub of each stage of the engine
         :return: sequence of GeomBase.Cylinder
         """
         return Cylinder(
             quantify=self.nStages,
-            radius=self.stagesHubDiameters[child.index] / 2,
+            radius=self.stages_hub_diameter[child.index] / 2,
             position=translate(
                 self.position,
                 "z",
-                self.stagesStartPoint[child.index] * self.shaftLength,
+                self.stages_start_point[child.index] * self.shaftLength,
             ),
             height=self.stages_thickness[child.index],
             hidden=True,
         )
 
     @Part
-    def stagesDisks(self):
+    def stages_disks(self):
         """
         The substracted solid of [outer_stage_disks] and [inner_stage_disks] to model the size of the rotor
         :return: GeomBase.SubtractedSolid
         """
         return SubtractedSolid(
             quantify=self.nStages,
-            shape_in=self.outerStageDisks[child.index],
-            tool=self.innerStageDisks[child.index],
+            shape_in=self.outer_stage_disks[child.index],
+            tool=self.inner_stage_disks[child.index],
             color="red",
             transparency=self.transparency,
         )
@@ -120,13 +119,13 @@ class EngineShaft(GeomBase):
             position=translate(
                 self.position,
                 "z",
-                self.stagesStartPoint[child.index] * self.shaftLength,
+                self.stages_start_point[child.index] * self.shaftLength,
             ),
-            map_down="stagesHubDiameters->hubDiameter,\
-                            stagesOuterDiameters->outerDiameter,\
-                            stagesThickness->stageThickness,\
-                            rotorsPerStage->nRotors, \
-                            bladesPerRotor->nBladesPerRotor",
+            map_down="stages_hub_diameter->hubDiameter,\
+                            stages_outer_diameter->outerDiameter,\
+                            stages_thickness->stageThickness,\
+                            rotors_per_stage->nRotors, \
+                            blades_per_rotor->nBladesPerRotor",
             rotorIndex=child.index,
         )
 

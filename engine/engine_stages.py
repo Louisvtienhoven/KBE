@@ -54,11 +54,11 @@ class EngineStage(GeomBase):
         """
         if self.rotorIndex != 0:
             # translation for third-rotor fragment
-            translation = 1 / 2 * self.fragment_size
+            translation = 1 / 2 * (self.hubDiameter / 2 + self.blade_span / 3)
         else:
             # translation for fan blade fragment
             translation = (
-                                  self.fragment_size * (2 / 3 - 1 / 2) + self.hubDiameter / 2
+                                  self.blade_span * (2 / 3 - 1 / 2) + self.hubDiameter / 2
             ) * -1
         return translation
 
@@ -74,8 +74,7 @@ class EngineStage(GeomBase):
             riskVolumeSize = sqrt(3) * fragment_size
         else:
             # third-rotor fragment
-            fragment_size = self.blade_span
-            riskVolumeSize = fragment_size
+            riskVolumeSize = self.blade_span
         return riskVolumeSize
 
     @Part

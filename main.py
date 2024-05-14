@@ -1,25 +1,25 @@
 from parapy.geom import *
 from parapy.core import *
 from parapy.core.widgets import Dropdown
+from parapy.exchange import STEPWriter
 
 from assembly.config_t_tail import FuselageMounted
 from assembly.config_conv import WingMounted
 from fuselage.aircraft_body import AircraftBody
 
 from fuselage.EWIS import WingChannel
-from rotorburst_volumes.risk_volume import RiskVolume
+from rotorburst_volumes.evaluate_risk_zones import RiskVolumeAnalysis
+
+# import matlab.engine
+# MATLAB_ENGINE = matlab.engine.start_matlab()
 
 
-class RotorBurstAnalysis(GeomBase):
+class MainAssembly(GeomBase):
     # the configuration of the aircraft: wing mounted or fuselage mounted engines
     aircraft_config = Input(
         True,
         widget=Dropdown([True, False], labels=["Wing Mounted", "Fuselage Mounted"]),
     )
-
-    @Input
-    def test(self):
-        return self.aircraft_config
 
     @Part
     def configuration(self):
@@ -53,18 +53,6 @@ class RotorBurstAnalysis(GeomBase):
         """
         return AircraftBody()
 
-    @Part
-    def risk_volume(self):
-        """
-        The risk volumes based on the stage of the engine of interest. The orientation of the risk volume can be modified
-        by the user
-        :return: GeomBase.RiskVolume object
-        """
-        return RiskVolume(
-            engines=self.configuration.engine,
-            pass_down="aircraftConfig",
-        )
-
     @Attribute
     def channel_shapes(self):
         """
@@ -72,28 +60,33 @@ class RotorBurstAnalysis(GeomBase):
         :return: list
         """
         channelShapes = []
-        for part in self.wiring.parts:
-            if part.TOPODIM == 3: # Only work with Solids
+        for part in self.wiring.children:
+            if part.TOPOLEVEL == 2: # Only work with Solids
                 channelShapes.append(part)
         return channelShapes
 
     @Part
-    def channel_in_risk_zone(self):
-        """
-        Create fused solids for the shapes in [channel_shapes] that intersect with a risk volume at the determined
-        orientation corresponding to a stage of an engine
-        :return: GeomBase.FusedSolid
-        """
-        return FusedSolid(
-            quantify=len(self.channel_shapes),
-            shape_in=self.channel_shapes[child.index],
-            tool=self.risk_volume.risk_volume_shell,
-            color="red",
-        )  # , keep_tool=True, color='red')
+    def pra_rotor_burst(self):
+        return RiskVolumeAnalysis(pass_down="configuration, aircraft_config, channel_shapes")
+
+    # pathchanged = False
+    # @Attribute
+    # def make_table(self):
+    #     if not self.pathchanged:
+    #         # change matlab root directory to Q3D, so it can find the function
+    #         MATLAB_ENGINE.cd(r'./matlab_files')
+    #         self.pathchanged=True
+    #
+    #     return MATLAB_ENGINE.make_table()
+
+    @Part
+    def step_writer(self):
+        return STEPWriter(nodes=[self.configuration.engine[0].nacelle.srf_nacelle,
+                                 self.configuration.engine[0].shaft.stages_disks], filename="engine.step")
 
 
 if __name__ == "__main__":
     from parapy.gui import display
 
-    obj = RotorBurstAnalysis()
+    obj = MainAssembly()
     display(obj)
