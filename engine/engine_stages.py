@@ -16,9 +16,7 @@ Model blades initially as ruled surfaces
 from parapy.geom import *
 from parapy.core import *
 from engine.engine_blades import EngineStageRotor
-from utilities.ref_frame import Frame
 from math import *
-import numpy as np
 
 
 class EngineStage(GeomBase):
@@ -58,7 +56,7 @@ class EngineStage(GeomBase):
         else:
             # translation for fan blade fragment
             translation = (
-                                  self.blade_span * (2 / 3 - 1 / 2) + self.hubDiameter / 2
+                self.blade_span * (2 / 3 - 1 / 2) + self.hubDiameter / 2
             ) * -1
         return translation
 

@@ -2,9 +2,8 @@ from parapy.geom import *
 from parapy.core import *
 
 from engine.engine_full import Engine
-from fuselage.aircraft_body import AircraftBody
 from fuselage.wing import Wing
-from fuselage.channel import ChannelSweep, ChannelZ, ChannelX
+from fuselage.channel import ChannelSweep, ChannelX
 
 from engine.engine_pylon import Pylon
 

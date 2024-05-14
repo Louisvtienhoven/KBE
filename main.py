@@ -42,7 +42,7 @@ class MainAssembly(GeomBase):
             aft_spar_root_pos=self.structures.right_wing.aft_spar_root_location,
             front_spar_tip_pos=self.structures.right_wing.front_spar_tip_location,
             aft_spar_tip_pos=self.structures.right_wing.aft_spar_tip_location,
-            color="blue"
+            color="blue",
         )
 
     @Part
@@ -61,13 +61,15 @@ class MainAssembly(GeomBase):
         """
         channelShapes = []
         for part in self.wiring.children:
-            if part.TOPOLEVEL == 2: # Only work with Solids
+            if part.TOPOLEVEL == 2:  # Only work with Solids
                 channelShapes.append(part)
         return channelShapes
 
     @Part
     def pra_rotor_burst(self):
-        return RiskVolumeAnalysis(pass_down="configuration, aircraft_config, channel_shapes")
+        return RiskVolumeAnalysis(
+            pass_down="configuration, aircraft_config, channel_shapes"
+        )
 
     # pathchanged = False
     # @Attribute
@@ -81,8 +83,13 @@ class MainAssembly(GeomBase):
 
     @Part
     def step_writer(self):
-        return STEPWriter(nodes=[self.configuration.engine[0].nacelle.srf_nacelle,
-                                 self.configuration.engine[0].shaft.stages_disks], filename="engine.step")
+        return STEPWriter(
+            nodes=[
+                self.configuration.engine[0].nacelle.srf_nacelle,
+                self.configuration.engine[0].shaft.stages_disks,
+            ],
+            filename="engine.step",
+        )
 
 
 if __name__ == "__main__":

@@ -1,7 +1,6 @@
 from parapy.geom import *
 from parapy.core import *
-from math import pi
-from parapy.core.widgets import Dropdown, ObjectPicker, PyField
+from parapy.core.widgets import Dropdown
 
 # from assembly.config_t_tail import FuselageMounted
 # from assembly.config_conv import WingMounted

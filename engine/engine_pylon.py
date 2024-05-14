@@ -15,7 +15,6 @@ Model blades initially as ruled surfaces
 
 from parapy.geom import *
 from parapy.core import *
-from engine.engine_nacelle import Nacelle
 
 
 class Pylon(LoftedSolid):

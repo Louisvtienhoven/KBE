@@ -1,7 +1,6 @@
 import numpy as np
 from parapy.geom import *
 from parapy.core import *
-from parapy.core.widgets import Dropdown
 
 
 class RiskVolume(GeomBase):
@@ -9,7 +8,7 @@ class RiskVolume(GeomBase):
     engines = Input()
 
     # rotation direction of the engine (clockwise or counter clockwise)
-    rotation_direction = Input()#0, widget=Dropdown([1, 0], labels=["CW", "CCW"]))
+    rotation_direction = Input()  # 0, widget=Dropdown([1, 0], labels=["CW", "CCW"]))
 
     # height of the risk volume from start to end plane
     risk_volume_height = Input(10.0)
@@ -18,20 +17,20 @@ class RiskVolume(GeomBase):
     risk_volume_orientation = Input(0.0)
 
     # angle at which the risk volume spreads as it propagates
-    spread_angle = Input()#5.0)
+    spread_angle = Input()  # 5.0)
 
     # the index of the engine of interest, either "Left" (0) or "Right" (0)
-    engine_index = Input()#
-        #0, widget=Dropdown([0, 1], labels=["Left", "Right"], autocompute=True)
-    #)
+    engine_index = Input()  #
+    # 0, widget=Dropdown([0, 1], labels=["Left", "Right"], autocompute=True)
+    # )
 
     # the index of the stage of interest of the engine
-    engine_stage_index = Input()#
-        #0,
-        #widget=Dropdown(
-            #[0, 1, 2, 3, 4], labels=["Fan", "LP-comp", "HP-comp", "HP-turb", "LP-turb"]
-        #),
-    #)
+    engine_stage_index = Input()  #
+    # 0,
+    # widget=Dropdown(
+    # [0, 1, 2, 3, 4], labels=["Fan", "LP-comp", "HP-comp", "HP-turb", "LP-turb"]
+    # ),
+    # )
 
     @Attribute
     def engine_stage(self):
@@ -41,7 +40,6 @@ class RiskVolume(GeomBase):
         """
         return self.engines[self.engine_index].shaft.stages[self.engine_stage_index]
 
-
     @Attribute
     def risk_volume_position(self):
         """
@@ -50,8 +48,12 @@ class RiskVolume(GeomBase):
         0 deg upwards, in accordance with CS25
         :return: GeomBase.Position object
         """
-        return Position(self.engine_stage.position,
-                        orientation=Orientation(x=Vector(1,0,0),y=Vector(0,1,0),z=Vector(0,0,1)))
+        return Position(
+            self.engine_stage.position,
+            orientation=Orientation(
+                x=Vector(1, 0, 0), y=Vector(0, 1, 0), z=Vector(0, 0, 1)
+            ),
+        )
 
     @Part
     def risk_volume_plane(self):
@@ -64,12 +66,26 @@ class RiskVolume(GeomBase):
         return Rectangle(
             width=self.engine_stage.stageThickness,
             length=self.engine_stage.risk_volume_size,
-            position=translate(rotate(self.risk_volume_position,
-                            'x', angle = self.risk_volume_orientation, deg=True),
-                               'x', self.engine_stage.stageThickness / 2,
-                            'y', self.engine_stage.offAxisTranslation - self.engine_stage.risk_volume_size / 2,
-                            'y', -2**self.rotation_direction * self.rotation_direction *
-                               (self.engine_stage.offAxisTranslation - self.engine_stage.risk_volume_size / 2))
+            position=translate(
+                rotate(
+                    self.risk_volume_position,
+                    "x",
+                    angle=self.risk_volume_orientation,
+                    deg=True,
+                ),
+                "x",
+                self.engine_stage.stageThickness / 2,
+                "y",
+                self.engine_stage.offAxisTranslation
+                - self.engine_stage.risk_volume_size / 2,
+                "y",
+                -(2**self.rotation_direction)
+                * self.rotation_direction
+                * (
+                    self.engine_stage.offAxisTranslation
+                    - self.engine_stage.risk_volume_size / 2
+                ),
+            ),
         )
 
     @Part
@@ -81,10 +97,11 @@ class RiskVolume(GeomBase):
         """
         return Rectangle(
             width=self.engine_stage.stageThickness
-                  + 2 * np.tan(np.deg2rad(self.spread_angle)) * self.risk_volume_height,
+            + 2 * np.tan(np.deg2rad(self.spread_angle)) * self.risk_volume_height,
             length=self.engine_stage.risk_volume_size,
-            position=translate(self.risk_volume_plane.position,
-                               "z", self.risk_volume_height)
+            position=translate(
+                self.risk_volume_plane.position, "z", self.risk_volume_height
+            ),
         )
 
     @Part
