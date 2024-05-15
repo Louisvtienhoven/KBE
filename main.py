@@ -11,6 +11,7 @@ from fuselage.EWIS import WingChannel4
 from fuselage.EWISB import WingChannel3
 from rotorburst_volumes.evaluate_risk_zones import RiskVolumeAnalysis
 
+
 # import matlab.engine
 # MATLAB_ENGINE = matlab.engine.start_matlab()
 
@@ -53,7 +54,9 @@ class MainAssembly(GeomBase):
 
     @Part
     def wiring_configuration(self):
-        return DynamicType(type=WingChannel3 if self.wiringConfig == True else WingChannel4)
+        return DynamicType(
+            type=WingChannel3 if self.wiringConfig == True else WingChannel4
+        )
 
     @Part
     def structures(self):

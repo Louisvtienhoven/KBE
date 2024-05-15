@@ -66,6 +66,7 @@ class RiskVolumeAnalysis(GeomBase):
             )
 
             if len(intersection.edges) > 54:
+                # TODO: implement on_face method
                 critical_orientation.append(orientation_range[idx])
 
         print("\n critical orientations")
@@ -93,7 +94,16 @@ class RiskVolumeAnalysis(GeomBase):
             quantify=len(self.channel_shapes),
             shape_in=self.channel_shapes[child.index],
             tool=self.risk_volume_instance.risk_volume_shell,
-            hidden=True,
+            # hidden=True,
+        )
+
+    @Part
+    def test(self):
+        return IntersectedShapes(
+            quantify=len(self.channel_shapes),
+            shape_in=self.channel_shapes[child.index],
+            tool=self.risk_volume_instance.risk_volume_shell,
+            # hidden=True,
         )
 
     @Attribute
@@ -117,8 +127,13 @@ class RiskVolumeAnalysis(GeomBase):
         :return: GeomBase.FusedSolid
         """
         return FusedSolid(
-            quantify=len(self.intersected_channels),
             shape_in=self.risk_volume_instance.risk_volume_shell,
-            tool=self.intersected_channels[child.index],
+            tool=self.intersected_channels,
             color="red",
-        )  # , keep_tool=True, color='red')
+        )  # raises runtime error when no intersection
+
+    @Attribute
+    def pra_overview(self):
+        channels_hit = self.channel_in_risk_zone.tool
+        for channel in channels_hit:
+            name = str(channel).split(".")[-1].split(" ")[0]

@@ -240,11 +240,12 @@ class Ewis(GeomBase):
             ch_length=2.3,
         )
 
+
 class WingChannel4(Ewis):
-    front_spar_tip_pos = Input(Position(Point(0,0,0)))
-    front_spar_root_pos = Input(Position(Point(1,0,0)))
-    aft_spar_tip_pos = Input(Position(Point(0,1,0)))
-    aft_spar_root_pos = Input(Position(Point(1,1,0)))
+    front_spar_tip_pos = Input(Position(Point(0, 0, 0)))
+    front_spar_root_pos = Input(Position(Point(1, 0, 0)))
+    aft_spar_tip_pos = Input(Position(Point(0, 1, 0)))
+    aft_spar_root_pos = Input(Position(Point(1, 1, 0)))
 
     @Attribute
     def front_spar_plane_normal(self):
