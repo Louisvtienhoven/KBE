@@ -3,7 +3,7 @@ from parapy.core import *
 from math import pi
 from parapy.core.widgets import Dropdown, ObjectPicker
 
-from fuselage.EWIS import Ewis
+from wiring.EWIS import Ewis
 from assembly.config_conv import WingMounted
 from assembly.config_t_tail import FuselageMounted
 

@@ -3,7 +3,7 @@ from parapy.core import *
 
 from engine.engine_full import Engine
 from fuselage.wing import Wing
-from fuselage.channel import ChannelSweep, ChannelZ, ChannelX
+from wiring.channel_definitions import ChannelSweep, ChannelZ, ChannelX
 
 from engine.engine_pylon import Pylon
 

@@ -1,8 +1,9 @@
 from parapy.geom import *
 from parapy.core import *
 
-from fuselage.channel import ChannelY, ChannelX, ChannelSweep, ChannelVtail
-from fuselage.torus import ChannelTor
+from wiring.channel_definitions import ChannelY, ChannelX, ChannelVtail
+from wiring.torus import ChannelTor
+from wiring.wing_channels import WingChannels
 
 
 class Ewis(GeomBase):
@@ -10,13 +11,14 @@ class Ewis(GeomBase):
     upper_channel_zposition = Input(1.2)
     channels_ypostion = Input(1.1)
 
-    @Part
-    def fuselage_connector(self):
-        return ChannelTor(position=translate(self.position, "x", 10, "y", 0, "z", -0.2))
+    front_spar_root_pos = Input()
+    aft_spar_root_pos = Input()
+    front_spar_tip_pos = Input()
+    aft_spar_tip_pos = Input()
 
     @Part
-    def fuselage_connector2(self):
-        return ChannelTor(position=translate(self.position, "x", 33, "y", 0, "z", -0.2))
+    def wing_channels(self):
+        return WingChannels(pass_down="front_spar_root_pos, aft_spar_root_pos, front_spar_tip_pos, aft_spar_tip_pos")
 
     @Part
     def lower_channel(self):
@@ -44,17 +46,6 @@ class Ewis(GeomBase):
             vector2=self.position.Vx,
             mesh_deflection=0.0001,
             color="Blue",
-        )
-
-    @Part
-    def upper_channel(self):
-        return ChannelX(
-            ch_radius=0.1,
-            position=translate(
-                self.position, "x", 7, "y", 0, "z", self.upper_channel_zposition
-            ),
-            color="Blue",
-            ch_length=33.2,
         )
 
     @Part
@@ -88,53 +79,6 @@ class Ewis(GeomBase):
                 "z",
                 self.upper_channel_zposition,
             ),
-            color="Blue",
-        )
-
-    # @Part
-    # def connectorY3(self):
-    #     return ChannelY(ch_length=self.channels_ypostion*2,ch_radius=.1, position=translate(self.position, 'x', 36.5, 'y', -1*self.channels_ypostion, 'z', self.upper_channel_zposition), color='Blue')
-
-    @Part
-    def wing_frontspar(self):
-        return ChannelSweep(
-            ch_radius=0.07,
-            position=translate(self.position, "x", 17, "y", 1, "z", -1),
-            color="Blue",
-        )
-
-    @Part
-    def wing_frontspar2(self):
-        return MirroredShape(
-            shape_in=self.wing_frontspar,
-            reference_point=self.position,
-            # Two vectors to define the mirror plane
-            vector1=self.position.Vz,
-            vector2=self.position.Vx,
-            mesh_deflection=0.0001,
-            color="Blue",
-        )
-
-    @Part
-    def wing_aftspar(self):
-        return ChannelSweep(
-            ch_radius=0.07,
-            position=translate(self.position, "x", 20.7, "y", 1, "z", -1.05),
-            color="Blue",
-            sweep_rad=1.03,
-            dihedral=0.145,
-            ch_length=10.5,
-        )
-
-    @Part
-    def wing_aftspar2(self):
-        return MirroredShape(
-            shape_in=self.wing_aftspar,
-            reference_point=self.position,
-            # Two vectors to define the mirror plane
-            vector1=self.position.Vz,
-            vector2=self.position.Vx,
-            mesh_deflection=0.0001,
             color="Blue",
         )
 
@@ -190,44 +134,78 @@ class Ewis(GeomBase):
             ch_length=2.3,
         )
 
-
-class WingChannel3(Ewis):
-    front_spar_tip_pos = Input(Position(Point(0, 0, 0)))
-    front_spar_root_pos = Input(Position(Point(1, 0, 0)))
-    aft_spar_tip_pos = Input(Position(Point(0, 1, 0)))
-    aft_spar_root_pos = Input(Position(Point(1, 1, 0)))
-
-    @Attribute
-    def front_spar_plane_normal(self):
-        return self.front_spar_tip_pos - self.front_spar_root_pos
-
-    @Attribute
-    def aft_spar_plane_normal(self):
-        return self.aft_spar_tip_pos - self.aft_spar_root_pos
+class ThreeChannels(Ewis):
+    @Part
+    def fuselage_connector(self):
+        return ChannelTor(position=translate(self.position, "x", 10, "y", 0, "z", -0.2),
+                          lower_channel1=self.lower_channel,
+                          lower_channel2=self.lower_channel2,
+                          upper_channels=[self.upper_channel])
 
     @Part
-    def front_spar(self):
-        return LineSegment(
-            start=self.front_spar_root_pos.point, end=self.front_spar_tip_pos.point
+    def fuselage_connector2(self):
+        return ChannelTor(position=translate(self.position, "x", 33, "y", 0, "z", -0.2),
+                          lower_channel1 = self.lower_channel,
+                          lower_channel2 = self.lower_channel2,
+                          upper_channels=[self.upper_channel])
+
+    @Part
+    def upper_channel(self):
+        return ChannelX(
+            ch_radius=0.1,
+            position=translate(
+                self.position, "x", 7, "y", 0, "z", self.upper_channel_zposition
+            ),
+            color="Blue",
+            ch_length=33.2,
+        )
+
+class FourChannels(Ewis):
+    @Part
+    def fuselage_connector(self):
+        return ChannelTor(position=translate(self.position, "x", 10, "y", 0, "z", -0.2),
+                          lower_channel1=self.lower_channel,
+                          lower_channel2=self.lower_channel2,
+                          upper_channels=[self.upper_channel])
+
+    @Part
+    def fuselage_connector2(self):
+        return ChannelTor(position=translate(self.position, "x", 33, "y", 0, "z", -0.2),
+                          lower_channel1 = self.lower_channel,
+                          lower_channel2 = self.lower_channel2,
+                          upper_channels=[self.upper_channel])
+
+    @Part
+    def upper_channel(self):
+        return ChannelX(
+            ch_radius=0.1,
+            position=translate(
+                self.position,
+                "x",
+                5,
+                "y",
+                self.channels_ypostion,
+                "z",
+                self.upper_channel_zposition,
+            ),
+            color="Blue",
+            ch_length=35.2,
         )
 
     @Part
-    def aft_spar(self):
-        return LineSegment(
-            start=self.aft_spar_root_pos.point, end=self.aft_spar_tip_pos.point
+    def upper_channel2(self):
+        return MirroredShape(
+            shape_in=self.upper_channel,
+            reference_point=self.position,
+            # Two vectors to define the mirror plane
+            vector1=self.position.Vz,
+            vector2=self.position.Vx,
+            mesh_deflection=0.0001,
+            color="Blue",
         )
-
-    @Part
-    def front_spar_channel(self):
-        return PipeSolid(path=self.front_spar, radius=0.07)
-
-    @Part
-    def aft_spar_channel(self):
-        return PipeSolid(path=self.aft_spar, radius=0.07)
-
 
 if __name__ == "__main__":
     from parapy.gui import display
 
-    obj = WingChannel3()
+    obj = FourChannels()
     display(obj)

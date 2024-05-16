@@ -5,10 +5,11 @@ from parapy.exchange import STEPWriter
 
 from assembly.config_t_tail import FuselageMounted
 from assembly.config_conv import WingMounted
+
 from fuselage.aircraft_body import AircraftBody
 
-from fuselage.EWIS import WingChannel4
-from fuselage.EWISB import WingChannel3
+from wiring.EWIS import ThreeChannels, FourChannels
+
 from rotorburst_volumes.evaluate_risk_zones import RiskVolumeAnalysis
 
 
@@ -55,7 +56,12 @@ class MainAssembly(GeomBase):
     @Part
     def wiring_configuration(self):
         return DynamicType(
-            type=WingChannel3 if self.wiringConfig == True else WingChannel4
+            type=ThreeChannels if self.wiringConfig == True else FourChannels,
+            front_spar_root_pos=self.structures.right_wing.front_spar_root_location,
+            aft_spar_root_pos=self.structures.right_wing.aft_spar_root_location,
+            front_spar_tip_pos=self.structures.right_wing.front_spar_tip_location,
+            aft_spar_tip_pos=self.structures.right_wing.aft_spar_tip_location,
+            color="blue",
         )
 
     @Part
