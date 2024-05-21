@@ -8,6 +8,7 @@ from assembly.config_conv import WingMounted
 
 from fuselage.aircraft_body import AircraftBody
 
+from wiring.EWIS import EWIS
 from wiring.EWIS import ThreeChannels, FourChannels
 
 from rotorburst_volumes.evaluate_risk_zones import RiskVolumeAnalysis
@@ -55,14 +56,22 @@ class MainAssembly(GeomBase):
 
     @Part
     def wiring_configuration(self):
-        return DynamicType(
-            type=ThreeChannels if self.wiringConfig == True else FourChannels,
-            front_spar_root_pos=self.structures.right_wing.front_spar_root_location,
-            aft_spar_root_pos=self.structures.right_wing.aft_spar_root_location,
-            front_spar_tip_pos=self.structures.right_wing.front_spar_tip_location,
-            aft_spar_tip_pos=self.structures.right_wing.aft_spar_tip_location,
-            color="blue",
-        )
+        return EWIS(configuration=self.wiringConfig,
+                    front_spar_root_pos=self.structures.right_wing.front_spar_root_location,
+                    aft_spar_root_pos=self.structures.right_wing.aft_spar_root_location,
+                    front_spar_tip_pos=self.structures.right_wing.front_spar_tip_location,
+                    aft_spar_tip_pos=self.structures.right_wing.aft_spar_tip_location,
+                    color="blue",)
+        # return DynamicType(
+        #     type=ThreeChannels if self.wiringConfig == True else FourChannels,
+        #     front_spar_root_pos=self.structures.right_wing.front_spar_root_location,
+        #     aft_spar_root_pos=self.structures.right_wing.aft_spar_root_location,
+        #     front_spar_tip_pos=self.structures.right_wing.front_spar_tip_location,
+        #     aft_spar_tip_pos=self.structures.right_wing.aft_spar_tip_location,
+        #     color="blue",
+        # )
+
+
 
     @Part
     def structures(self):

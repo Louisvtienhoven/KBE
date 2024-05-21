@@ -3,7 +3,7 @@ from parapy.core import *
 from math import pi
 from parapy.core.widgets import Dropdown, ObjectPicker
 
-from wiring.EWIS import Ewis
+from wiring.EWIS import EWIS
 from assembly.config_conv import WingMounted
 from assembly.config_t_tail import FuselageMounted
 
@@ -44,7 +44,7 @@ class RiskVolume(GeomBase):
 
     @Part
     def ewis(self):
-        return Ewis()
+        return EWIS()
 
     selected_channel = Input(widget=ObjectPicker(multiple=False, ask_confirmation=True))
 
