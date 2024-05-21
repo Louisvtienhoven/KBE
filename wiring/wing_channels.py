@@ -7,13 +7,41 @@ class WingChannels(GeomBase):
     aft_spar_tip_pos = Input(Position(Point(0, 1, 0)))
     aft_spar_root_pos = Input(Position(Point(1, 1, 0)))
 
+    connector_spanwise_position = Input(0.75)
+
     @Attribute
-    def front_spar_plane_normal(self):
+    def wing_connector_segment(self):
+        return self.front_connector_pos - self.aft_connector_pos
+
+    @Attribute
+    def front_spar_vector(self):
         return self.front_spar_tip_pos - self.front_spar_root_pos
 
     @Attribute
-    def aft_spar_plane_normal(self):
+    def aft_spar_vector(self):
         return self.aft_spar_tip_pos - self.aft_spar_root_pos
+
+    @Attribute
+    def front_connector_pos(self):
+        return self.front_spar_root_pos + self.front_spar_vector * self.connector_spanwise_position
+
+    @Attribute
+    def aft_connector_pos(self):
+        return self.aft_spar_root_pos + self.aft_spar_vector * self.connector_spanwise_position
+
+    @Part
+    def connector_segment(self):
+        return LineSegment(start = self.front_connector_pos.point, end = self.aft_connector_pos)
+
+    @Part
+    def right_connector(self):
+        return PipeSolid(path=self.connector_segment, radius = 0.07)
+
+    @Part
+    def left_connector(self):
+        return MirroredShape(shape_in=self.right_connector, reference_point = self.position,
+                             vector1=self.position.Vx,
+                             vector2=self.position.Vz)
 
     @Part
     def front_spar(self):

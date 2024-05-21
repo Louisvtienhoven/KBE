@@ -181,29 +181,7 @@ class Wing(LoftedSolid):
     def profiles(self):
         return [self.root_section, self.tip_section]
 
-    # @Attribute
-    # def front_spar_plane_normal(self):
-    #     return self.front_spar_tip_location - self.front_spar_root_location
-    #
-    # @Attribute
-    # def aft_spar_plane_normal(self):
-    #     return self.aft_spar_tip_location - self.aft_spar_root_location
-    #
-    # @Part
-    # def front_spar(self):
-    #     return LineSegment(start = self.front_spar_root_location.point, end = self.front_spar_tip_location.point)
-    #
-    # @Part
-    # def aft_spar(self):
-    #     return LineSegment(start = self.aft_spar_root_location.point, end = self.aft_spar_tip_location.point)
-    #
-    # @Part
-    # def front_spar_channel(self):
-    #     return PipeSolid(path=self.front_spar, radius=.07)
-    #
-    # @Part
-    # def aft_spar_channel(self):
-    #     return PipeSolid(path=self.aft_spar, radius=.07)
+
 
 
 if __name__ == "__main__":

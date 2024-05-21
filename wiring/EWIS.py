@@ -1,9 +1,10 @@
 from parapy.geom import *
 from parapy.core import *
 
-from wiring.channel_definitions import ChannelY, ChannelX, ChannelVtail
+from wiring.channel_definitions import ChannelY, ChannelX
 from wiring.torus import ChannelTor
 from wiring.wing_channels import WingChannels
+from wiring.empennage_channels import EmpennageChannels
 
 
 class Ewis(GeomBase):
@@ -19,6 +20,10 @@ class Ewis(GeomBase):
     @Part
     def wing_channels(self):
         return WingChannels(pass_down="front_spar_root_pos, aft_spar_root_pos, front_spar_tip_pos, aft_spar_tip_pos")
+
+    @Part
+    def empennage_channels(self):
+        return EmpennageChannels()
 
     @Part
     def lower_channel(self):
@@ -82,57 +87,6 @@ class Ewis(GeomBase):
             color="Blue",
         )
 
-    @Part
-    def wing_connector(self):
-        return ChannelX(
-            ch_radius=0.06,
-            position=translate(self.position, "x", 21.1, "y", 6, "z", -0.6),
-            color="Blue",
-            ch_length=2.15,
-        )
-
-    @Part
-    def wing_connector2(self):
-        return MirroredShape(
-            shape_in=self.wing_connector,
-            reference_point=self.position,
-            # Two vectors to define the mirror plane
-            vector1=self.position.Vz,
-            vector2=self.position.Vx,
-            mesh_deflection=0.0001,
-            color="Blue",
-        )
-
-    @Part
-    def vtail_frontspar(self):
-        return ChannelVtail(
-            ch_radius=0.04,
-            position=translate(self.position, "x", 36.5, "y", 0, "z", 1),
-            color="Blue",
-            sweep_rad=0.33,
-            dihedral=0.0,
-            ch_length=6.5,
-        )
-
-    @Part
-    def vtail_aftspar(self):
-        return ChannelVtail(
-            ch_radius=0.04,
-            position=translate(self.position, "x", 40, "y", 0, "z", 1),
-            color="Blue",
-            sweep_rad=1.0,
-            dihedral=0.0,
-            ch_length=5.5,
-        )
-
-    @Part
-    def vtail_connector(self):
-        return ChannelX(
-            ch_radius=0.02,
-            position=translate(self.position, "x", 39.3, "y", 0, "z", 4),
-            color="Blue",
-            ch_length=2.3,
-        )
 
 class ThreeChannels(Ewis):
     @Part
