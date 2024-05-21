@@ -30,6 +30,10 @@ class FuselageMounted(GeomBase):
 
     @Part
     def pylon(self):
+        """
+        Create the engine pylon connecting the shaft to the structures
+        :return: GeomBase.LoftedSolid
+        """
         return Pylon(
             position=translate(
                 self.position.rotate90("y"),

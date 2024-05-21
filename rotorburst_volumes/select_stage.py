@@ -8,7 +8,7 @@ from main import Main
 
 
 class RiskVolumePerStage(GeomBase):
-    engines = Main().configuration.engine
+    engines = Main().configuration.engines
 
     risk_volume_height = Input(10.0)
     risk_volume_orientation = Input(90.0)

@@ -104,14 +104,9 @@ class ChannelY(
             100,
         ]
     )
-    #: fuselage length
-    #: :type: float
+
     ch_length = Input(2)
 
-    # #positioning
-    # ch_position_x = Input(1)
-    # ch_position_y = Input(0)
-    # ch_position_z = Input(0)
     @Attribute
     def section_radius(self):
         """section radius multiplied by the radius distribution
@@ -177,10 +172,6 @@ class ChannelZ(
     ch_length = Input(2.0)
     transparency = 0.6
 
-    # #positioning
-    # ch_position_x = Input(1)
-    # ch_position_y = Input(0)
-    # ch_position_z = Input(0)
     @Attribute
     def section_radius(self):
         """section radius multiplied by the radius distribution
@@ -251,10 +242,6 @@ class ChannelSweep(
     sweep_rad = Input(0.6283)
     dihedral = Input(0.06)
 
-    # #positioning
-    # ch_position_x = Input(1)
-    # ch_position_y = Input(0)
-    # ch_position_z = Input(0)
     @Attribute
     def section_radius(self):
         """section radius multiplied by the radius distribution

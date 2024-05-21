@@ -9,10 +9,8 @@ from assembly.config_conv import WingMounted
 from fuselage.aircraft_body import AircraftBody
 
 from wiring.EWIS import EWIS
-from wiring.EWIS import ThreeChannels, FourChannels
 
 from rotorburst_volumes.evaluate_risk_zones import RiskVolumeAnalysis
-
 
 # import matlab.engine
 # MATLAB_ENGINE = matlab.engine.start_matlab()
@@ -40,38 +38,16 @@ class MainAssembly(GeomBase):
             type=WingMounted if self.aircraft_config == True else FuselageMounted
         )
 
-    # @Part
-    # def wiring(self):
-    #     """
-    #     The layout of the channels in both the wing and fuselage
-    #     :return: GeomBase.Ewis object
-    #     """
-    #     return WingChannel(
-    #         front_spar_root_pos=self.structures.right_wing.front_spar_root_location,
-    #         aft_spar_root_pos=self.structures.right_wing.aft_spar_root_location,
-    #         front_spar_tip_pos=self.structures.right_wing.front_spar_tip_location,
-    #         aft_spar_tip_pos=self.structures.right_wing.aft_spar_tip_location,
-    #         color="blue",
-    #     )
-
     @Part
     def wiring_configuration(self):
-        return EWIS(configuration=self.wiringConfig,
-                    front_spar_root_pos=self.structures.right_wing.front_spar_root_location,
-                    aft_spar_root_pos=self.structures.right_wing.aft_spar_root_location,
-                    front_spar_tip_pos=self.structures.right_wing.front_spar_tip_location,
-                    aft_spar_tip_pos=self.structures.right_wing.aft_spar_tip_location,
-                    color="blue",)
-        # return DynamicType(
-        #     type=ThreeChannels if self.wiringConfig == True else FourChannels,
-        #     front_spar_root_pos=self.structures.right_wing.front_spar_root_location,
-        #     aft_spar_root_pos=self.structures.right_wing.aft_spar_root_location,
-        #     front_spar_tip_pos=self.structures.right_wing.front_spar_tip_location,
-        #     aft_spar_tip_pos=self.structures.right_wing.aft_spar_tip_location,
-        #     color="blue",
-        # )
-
-
+        return EWIS(
+            configuration=self.wiringConfig,
+            front_spar_root_pos=self.structures.right_wing.front_spar_root_location,
+            aft_spar_root_pos=self.structures.right_wing.aft_spar_root_location,
+            front_spar_tip_pos=self.structures.right_wing.front_spar_tip_location,
+            aft_spar_tip_pos=self.structures.right_wing.aft_spar_tip_location,
+            color="blue",
+        )
 
     @Part
     def structures(self):
@@ -88,16 +64,21 @@ class MainAssembly(GeomBase):
         :return: list
         """
         channelShapes = []
-        for part in self.wiring.children:
-            if part.TOPOLEVEL == 2:  # Only work with Solids
-                channelShapes.append(part)
+        for child in self.wiring_configuration.children:
+            for part in child.parts:
+                if len(part.parts) == 0:
+                    if part.TOPODIM == 3:  # only work with solids
+                        channelShapes.append(part)
+                else:  # nested parts
+                    part_list = part.parts
+                    for nested_part in part_list:
+                        if nested_part.TOPODIM == 3:  # only work with solids
+                            channelShapes.append(nested_part)
         return channelShapes
 
     @Part
     def pra_rotor_burst(self):
-        return RiskVolumeAnalysis(
-            pass_down="configuration, aircraft_config, channel_shapes"
-        )
+        return RiskVolumeAnalysis(pass_down="configuration, channel_shapes")
 
     # pathchanged = False
     # @Attribute
@@ -113,8 +94,8 @@ class MainAssembly(GeomBase):
     def step_writer(self):
         return STEPWriter(
             nodes=[
-                self.configuration.engine[0].nacelle.srf_nacelle,
-                self.configuration.engine[0].shaft.stages_disks,
+                self.configuration.engines[0].nacelle.srf_nacelle,
+                self.configuration.engines[0].shaft.stages_disks,
             ],
             filename="engine.step",
         )

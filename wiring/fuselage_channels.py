@@ -4,6 +4,7 @@ from parapy.core import *
 from wiring.channel_definitions import ChannelY, ChannelX
 from wiring.torus import ChannelTor
 
+
 class FuselageChannels(GeomBase):
     lower_channel_zposition = Input(-1)
     upper_channel_zposition = Input(1.2)
@@ -75,17 +76,21 @@ class FuselageChannels(GeomBase):
 class ThreeChannels(FuselageChannels):
     @Part
     def fuselage_connector(self):
-        return ChannelTor(position=translate(self.position, "x", 10, "y", 0, "z", -0.2),
-                          lower_channel1=self.lower_channel,
-                          lower_channel2=self.lower_channel2,
-                          upper_channels=[self.upper_channel])
+        return ChannelTor(
+            position=translate(self.position, "x", 10, "y", 0, "z", -0.2),
+            lower_channel1=self.lower_channel,
+            lower_channel2=self.lower_channel2,
+            upper_channels=[self.upper_channel],
+        )
 
     @Part
     def fuselage_connector2(self):
-        return ChannelTor(position=translate(self.position, "x", 33, "y", 0, "z", -0.2),
-                          lower_channel1 = self.lower_channel,
-                          lower_channel2 = self.lower_channel2,
-                          upper_channels=[self.upper_channel])
+        return ChannelTor(
+            position=translate(self.position, "x", 33, "y", 0, "z", -0.2),
+            lower_channel1=self.lower_channel,
+            lower_channel2=self.lower_channel2,
+            upper_channels=[self.upper_channel],
+        )
 
     @Part
     def upper_channel(self):
@@ -98,20 +103,25 @@ class ThreeChannels(FuselageChannels):
             ch_length=33.2,
         )
 
+
 class FourChannels(FuselageChannels):
     @Part
     def fuselage_connector(self):
-        return ChannelTor(position=translate(self.position, "x", 10, "y", 0, "z", -0.2),
-                          lower_channel1=self.lower_channel,
-                          lower_channel2=self.lower_channel2,
-                          upper_channels=[self.upper_channel])
+        return ChannelTor(
+            position=translate(self.position, "x", 10, "y", 0, "z", -0.2),
+            lower_channel1=self.lower_channel,
+            lower_channel2=self.lower_channel2,
+            upper_channels=[self.upper_channel],
+        )
 
     @Part
     def fuselage_connector2(self):
-        return ChannelTor(position=translate(self.position, "x", 33, "y", 0, "z", -0.2),
-                          lower_channel1 = self.lower_channel,
-                          lower_channel2 = self.lower_channel2,
-                          upper_channels=[self.upper_channel])
+        return ChannelTor(
+            position=translate(self.position, "x", 33, "y", 0, "z", -0.2),
+            lower_channel1=self.lower_channel,
+            lower_channel2=self.lower_channel2,
+            upper_channels=[self.upper_channel],
+        )
 
     @Part
     def upper_channel(self):

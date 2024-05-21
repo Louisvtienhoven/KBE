@@ -21,9 +21,13 @@ class Pylon(LoftedSolid):
     fan_diameter = Input(2.0)
     length = Input(3.0)
 
-    @Attribute
+    @Input
     def pylon_height(self):
         return 1.5 * (self.fan_diameter / 2)
+
+    @Attribute
+    def profiles(self):
+        return [self.pylon_engine_mount, self.pylon_wing_mount]
 
     @Part
     def pylon_engine_mount(self):
@@ -55,10 +59,6 @@ class Pylon(LoftedSolid):
         return LoftedSolid(
             profiles=[self.pylon_engine_mount, self.pylon_wing_mount], color="black"
         )
-
-    @Attribute
-    def profiles(self):
-        return [self.pylon_engine_mount, self.pylon_wing_mount]
 
 
 if __name__ == "__main__":

@@ -4,7 +4,6 @@ from parapy.core import *
 
 
 class RiskVolume(GeomBase):
-    aircraft_config = Input()
     engines = Input()
 
     # rotation direction of the engine (clockwise or counter clockwise)

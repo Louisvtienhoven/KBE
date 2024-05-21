@@ -7,14 +7,18 @@ import tkinter.messagebox as tkmb
 import numpy as np
 
 from rotorburst_volumes.risk_volume import RiskVolume
+from rotorburst_volumes.create_overview import RotorBurstOverview
 
 
 class RiskVolumeAnalysis(GeomBase):
     configuration = Input()
-    aircraft_config = Input()
     channel_shapes = Input()
 
     release_angle = Input(0.0)
+
+    granularity = Input(5, label="Steps in angle for PRA")
+    start_evaluation = Input(40, label="Start angle of evaluation")
+    end_evaluation = Input(45, label="Stop angle of evaluation")
 
     # rotation direction of the engine (clockwise or counter clockwise)
     rotation_direction = Input(0, widget=Dropdown([1, 0], labels=["CW", "CCW"]))
@@ -38,7 +42,11 @@ class RiskVolumeAnalysis(GeomBase):
     @Attribute(label="Find critical release angles")
     # @action(label='Find critical release angles')
     def evaluate_risk_zones(self):
-        orientation_range = np.arange(0, 95, 5)
+        orientation_range = np.arange(
+            self.start_evaluation,
+            self.end_evaluation + self.granularity,
+            self.granularity,
+        )
 
         critical_orientation = []
         for idx in range(len(orientation_range)):
@@ -53,7 +61,6 @@ class RiskVolumeAnalysis(GeomBase):
             risk_volume_instances = RiskVolume(
                 risk_volume_orientation=orientation_range[idx],
                 engines=self.configuration.engine,
-                aircraft_config=self.aircraft_config,
                 rotation_direction=self.rotation_direction,
                 spread_angle=self.spread_angle,
                 engine_index=self.engine_index,
@@ -65,7 +72,7 @@ class RiskVolumeAnalysis(GeomBase):
                 tool=self.channel_shapes,
             )
 
-            if len(intersection.edges) > 54:
+            if len(intersection.edges) > 53:
                 # TODO: implement on_face method
                 critical_orientation.append(orientation_range[idx])
 
@@ -83,8 +90,7 @@ class RiskVolumeAnalysis(GeomBase):
     def risk_volume_instance(self):
         return RiskVolume(
             risk_volume_orientation=self.release_angle,
-            engines=self.configuration.engine,
-            aircraft_config=self.aircraft_config,
+            engines=self.configuration.engines,
             pass_down="rotation_direction, spread_angle, engine_index, engine_stage_index",
         )
 
@@ -97,14 +103,13 @@ class RiskVolumeAnalysis(GeomBase):
             # hidden=True,
         )
 
-    @Part
-    def test(self):
-        return IntersectedShapes(
-            quantify=len(self.channel_shapes),
-            shape_in=self.channel_shapes[child.index],
-            tool=self.risk_volume_instance.risk_volume_shell,
-            # hidden=True,
-        )
+    # @Part
+    # def test(self):
+    #     return IntersectedShapes(
+    #         shape_in=self.risk_volume_instance.risk_volume_shell,
+    #         tool=self.channel_shapes,
+    #         # hidden=True,
+    #     )
 
     @Attribute
     def intersected_channels(self):
@@ -135,5 +140,16 @@ class RiskVolumeAnalysis(GeomBase):
     @Attribute
     def pra_overview(self):
         channels_hit = self.channel_in_risk_zone.tool
+        channels_hit_names = []
         for channel in channels_hit:
             name = str(channel).split(".")[-1].split(" ")[0]
+            channels_hit_names.append(name)
+
+        return channels_hit_names
+
+    @Part
+    def overview(self):
+        return RotorBurstOverview(
+            pass_down="configuration, channel_shapes, rotation_direction, spread_angle,engine_index, engine_stage_index",
+            critical_angles=self.evaluate_risk_zones,
+        )

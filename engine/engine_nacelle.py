@@ -17,14 +17,13 @@ from utilities.ref_frame import Frame
 class Nacelle(ThickShell):
     length = Input(3.0)  # m
     fan_diameter = Input(2.0)  # m
-    bypass_ratio = Input(10.0)  # -
     thickness = Input(0.01)  # m
 
-    @Attribute
+    @Input
     def max_diameter(self):
         return self.fan_diameter * 1.1
 
-    @Attribute
+    @Input
     def max_diameter_position(self):
         return self.length * 0.2  # at 20% of total length
 

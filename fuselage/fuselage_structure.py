@@ -40,10 +40,6 @@ class Fuselage(
         """
         return self.fu_length / (len(self.fu_sections) - 1)
 
-    # @Attribute
-    # def transparency(self):
-    #     return self.transparency
-
     @Part(in_tree=(__name__ == "__main__"))
     def profiles(self):
         return Circle(

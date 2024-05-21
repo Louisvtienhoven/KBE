@@ -15,7 +15,7 @@ class RiskVolume(GeomBase):
     rotation = Input(0.0)
 
     if wing_mount:
-        engines = WingMounted().engine
+        engines = WingMounted().engines
 
         @Part
         def assembly(self):

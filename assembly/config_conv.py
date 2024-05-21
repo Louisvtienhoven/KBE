@@ -15,7 +15,7 @@ class WingMounted(GeomBase):
     z_pos_engine_wing = Input(-2.15)
 
     @Part
-    def engine(self):
+    def engines(self):
         return Engine(
             quantify=2,
             label=["left", "right"][child.index],

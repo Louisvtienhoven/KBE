@@ -1,11 +1,12 @@
 from parapy.geom import *
 from parapy.core import *
 
+
 class WingChannels(GeomBase):
-    front_spar_tip_pos = Input(Position(Point(0, 0, 0)))
-    front_spar_root_pos = Input(Position(Point(1, 0, 0)))
-    aft_spar_tip_pos = Input(Position(Point(0, 1, 0)))
-    aft_spar_root_pos = Input(Position(Point(1, 1, 0)))
+    front_spar_tip_pos = Input()
+    front_spar_root_pos = Input()
+    aft_spar_tip_pos = Input()
+    aft_spar_root_pos = Input()
 
     connector_spanwise_position = Input(0.75)
 
@@ -23,36 +24,51 @@ class WingChannels(GeomBase):
 
     @Attribute
     def front_connector_pos(self):
-        return self.front_spar_root_pos + self.front_spar_vector * self.connector_spanwise_position
+        return (
+            self.front_spar_root_pos
+            + self.front_spar_vector * self.connector_spanwise_position
+        )
 
     @Attribute
     def aft_connector_pos(self):
-        return self.aft_spar_root_pos + self.aft_spar_vector * self.connector_spanwise_position
+        return (
+            self.aft_spar_root_pos
+            + self.aft_spar_vector * self.connector_spanwise_position
+        )
 
     @Part
     def connector_segment(self):
-        return LineSegment(start = self.front_connector_pos.point, end = self.aft_connector_pos)
+        return LineSegment(
+            start=self.front_connector_pos.point, end=self.aft_connector_pos
+        )
 
     @Part
     def right_connector(self):
-        return PipeSolid(path=self.connector_segment, radius = 0.07)
+        return PipeSolid(path=self.connector_segment, radius=0.07)
 
     @Part
     def left_connector(self):
-        return MirroredShape(shape_in=self.right_connector, reference_point = self.position,
-                             vector1=self.position.Vx,
-                             vector2=self.position.Vz)
+        return MirroredShape(
+            shape_in=self.right_connector,
+            reference_point=self.position,
+            vector1=self.position.Vx,
+            vector2=self.position.Vz,
+        )
 
     @Part
     def front_spar(self):
         return LineSegment(
-            start=self.front_spar_root_pos.point, end=self.front_spar_tip_pos.point
+            start=self.front_spar_root_pos.point,
+            end=self.front_spar_tip_pos.point,
+            hidden=True,
         )
 
     @Part
     def aft_spar(self):
         return LineSegment(
-            start=self.aft_spar_root_pos.point, end=self.aft_spar_tip_pos.point
+            start=self.aft_spar_root_pos.point,
+            end=self.aft_spar_tip_pos.point,
+            hidden=True,
         )
 
     @Part
@@ -65,22 +81,18 @@ class WingChannels(GeomBase):
 
     @Part
     def left_front_spar_channel(self):
-        return MirroredShape(shape_in=self.right_front_spar_channel,
-                             reference_point = self.position,
-                             vector1=self.position.Vx,
-                             vector2=self.position.Vz)
+        return MirroredShape(
+            shape_in=self.right_front_spar_channel,
+            reference_point=self.position,
+            vector1=self.position.Vx,
+            vector2=self.position.Vz,
+        )
 
     @Part
     def left_aft_spar_channel(self):
-        return MirroredShape(shape_in=self.right_aft_spar_channel,
-                             reference_point = self.position,
-                             vector1=self.position.Vx,
-                             vector2=self.position.Vz)
-
-
-if __name__ == "__main__":
-    from parapy.gui import display
-
-    obj = WingChannels()
-    display(obj)
-
+        return MirroredShape(
+            shape_in=self.right_aft_spar_channel,
+            reference_point=self.position,
+            vector1=self.position.Vx,
+            vector2=self.position.Vz,
+        )

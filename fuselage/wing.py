@@ -182,8 +182,6 @@ class Wing(LoftedSolid):
         return [self.root_section, self.tip_section]
 
 
-
-
 if __name__ == "__main__":
     from parapy.gui import display
 
