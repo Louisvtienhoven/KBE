@@ -4,22 +4,18 @@ from parapy.core import *
 
 class Fuselage(
     LoftedShell
-):  # note the use of LoftedSolid as superclass. It means that every Fuselage instance /
-    # can generated lofts. A required input for LoftedSolid is a list of profiles, thereby either /
-    # an @Attribute or a @Part sequence called "profiles" must be present in the body of the class. /
-    # Use 'Display node' in the root node of the object tree to visualise the (yellow) loft in the GUI graphical viewer
+):  """Fuselage geometry, a loft through circles."""
 
-    """Fuselage geometry, a loft through circles."""
-
-    #: fuselage radius
-    #: :type: float
+    # fuselage radius
     fu_radius = Input(3.95 / 2)
+
     #: fuselage sections
-    #: :type: collections.Sequence[float]
     fu_sections = Input([10, 80, 90, 95, 100, 100, 100, 100, 95, 80, 10])
+
     #: fuselage length
-    #: :type: float
     fu_length = Input(44.51)
+
+    #: transparency of the LoftedShell in the GUI
     transparency = Input(0.8)
 
     @Attribute
@@ -42,6 +38,11 @@ class Fuselage(
 
     @Part(in_tree=(__name__ == "__main__"))
     def profiles(self):
+        """
+        The sections of the fuselage modelled as circles
+        :param self:
+        :return: GeomBase.Circle
+        """
         return Circle(
             quantify=len(self.fu_sections),
             color="Black",

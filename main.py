@@ -23,7 +23,8 @@ class MainAssembly(GeomBase):
         widget=Dropdown([True, False], labels=["Wing Mounted", "Fuselage Mounted"]),
     )
 
-    wiringConfig = Input(
+    # the wiring configuriation of the fuselage: four channels or three channels along the length of the fuselage
+    wiring_config = Input(
         True,
         widget=Dropdown([True, False], labels=["3 Channel Option", "4 Channel Option"]),
     )
@@ -40,8 +41,12 @@ class MainAssembly(GeomBase):
 
     @Part
     def wiring_configuration(self):
+        """
+        The configuration of the wiring based on [wiring_config]
+        :return: EWIS object with parts for wing channels, fuselage channels and empennage channels
+        """
         return EWIS(
-            configuration=self.wiringConfig,
+            configuration=self.wiring_config,
             front_spar_root_pos=self.structures.right_wing.front_spar_root_location,
             aft_spar_root_pos=self.structures.right_wing.aft_spar_root_location,
             front_spar_tip_pos=self.structures.right_wing.front_spar_tip_location,
@@ -58,7 +63,7 @@ class MainAssembly(GeomBase):
         return AircraftBody()
 
     @Attribute
-    def channel_shapes(self):
+    def channelShapes(self):
         """
         Creates a list of all the shapes in [self.wiring] which can be used to determine intersection with a risk volume
         :return: list
@@ -78,7 +83,14 @@ class MainAssembly(GeomBase):
 
     @Part
     def pra_rotor_burst(self):
-        return RiskVolumeAnalysis(pass_down="configuration, channel_shapes")
+        """
+        Internal analysis module to determine for which release angles per engine, per rotation direction,
+        per engine stage- which channels are in the risk zone. The risk zones and channels that are hit
+        can be visualised.
+        :return: RiskVolumeAnalysis object with RiskVolume.LoftedSolid and GeomBase.FusedSolid as parts
+        """
+        return RiskVolumeAnalysis(pass_down="configuration",
+                                  channel_shapes=self.channelShapes)
 
     # pathchanged = False
     # @Attribute
@@ -90,8 +102,12 @@ class MainAssembly(GeomBase):
     #
     #     return MATLAB_ENGINE.make_table()
 
-    @Part
+    @action(label="Write to step file")
     def step_writer(self):
+        """
+        Module to write geometry to a .stp file
+        :return: .stp file
+        """
         return STEPWriter(
             nodes=[
                 self.configuration.engines[0].nacelle.srf_nacelle,
