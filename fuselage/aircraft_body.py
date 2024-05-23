@@ -63,6 +63,7 @@ class AircraftBody(GeomBase):
             w_semi_span=5.87,
             dihedral=0,
             transparency=0.5,
+            dire='./fuselage/whitcomb_tail.dat'
         )
 
 
