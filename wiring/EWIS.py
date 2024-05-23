@@ -43,7 +43,7 @@ class EWIS(GeomBase):
         :return: ThreeChannels or Fourchannels object with GeomBase.PipeSolids as parts
         """
         return DynamicType(
-            type=(ThreeChannels if self.configuration == True else FourChannels), h_tail = self.h_tail
+            type=(ThreeChannels if self.configuration == True else FourChannels), h_tail = self.h_tail, v_tail = self.v_tail
         )
 
 

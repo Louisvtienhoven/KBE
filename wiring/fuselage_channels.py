@@ -11,6 +11,7 @@ class FuselageChannels(GeomBase):
     channels_ypostion = Input(1.1)
 
     h_tail = Input()
+    v_tail = Input()
 
     @Part
     def lower_channel(self):
@@ -119,7 +120,7 @@ class FourChannels(FuselageChannels):
                 self.upper_channel_zposition,
             ),
             color="Blue",
-            ch_length=35.2,
+            ch_length=32,
         )
 
     @Part
@@ -188,6 +189,34 @@ class FourChannels(FuselageChannels):
             radius=0.05,
         )
 
-    # @Part
-    # def tail_connector(self):
-    #     return PipeSolid(path=self.crv_tail_connector, radius=0.07)
+    @Part
+    def fuselage_connector4(self):
+        return MirroredShape(shape_in=self.fuselage_connector3,
+                             reference_point=self.position,
+                             vector1=self.position.Vx,
+                             vector2=self.position.Vz
+                             )
+
+    @Part
+    def fuselage_connector_ceiling2(self):
+        return PipeSolid(path=
+             TranslatedCurve(
+                 curve_in=self.crv_fuselage_connector,
+                 displacement=Vector(33,0,0)
+             ),
+        radius=0.05
+        )
+
+    @Attribute
+    def crv_tail_connector(self):
+        return Arc3P(
+            point1=self.h_tail.aft_spar_root_location.point,
+            point3=self.h_tail.aft_spar_root_location.point.mirror(ref=self.position,
+                                                             axis1=self.position.Vx,
+                                                             axis2=self.position.Vz),
+            point2=self.v_tail.aft_spar_root_location.point
+        )
+
+    @Part
+    def tail_connector(self):
+        return PipeSolid(path=self.crv_tail_connector, radius=0.07)
