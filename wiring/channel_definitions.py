@@ -53,7 +53,7 @@ class ChannelBase(LoftedSolid):
 
 class ChannelX(ChannelBase):
     axis = 'x'
-    ch_length = Input(32.0)
+    ch_length = Input(31.5)
 
     @Attribute
     def rotation_axis(self):
