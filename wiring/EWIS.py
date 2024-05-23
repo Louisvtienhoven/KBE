@@ -11,21 +11,12 @@ class EWIS(GeomBase):
     #: type: Bool
     configuration = Input()
 
-    # The position of the root location of the front spar
-    #: type: generic.positioning.Position
-    front_spar_root_pos = Input()
+    wing = Input()
 
-    # The position of the root location of the aft spar
-    #: type: generic.positioning.Position
-    aft_spar_root_pos = Input()
+    h_tail = Input()
 
-    # The position of the tip location of the front spar
-    #: type: generic.positioning.Position
-    front_spar_tip_pos = Input()
+    v_tail = Input()
 
-    # The position of the tip location of the aft spar
-    #: type: generic.positioning.Position
-    aft_spar_tip_pos = Input()
 
     @Part
     def wing_channels(self):
@@ -34,7 +25,7 @@ class EWIS(GeomBase):
         :return: WingChannels object with GeomBase.PipeSolid as parts
         """
         return WingChannels(
-            pass_down="front_spar_root_pos, aft_spar_root_pos, front_spar_tip_pos, aft_spar_tip_pos"
+            pass_down="wing"
         )
 
     @Part
@@ -43,7 +34,7 @@ class EWIS(GeomBase):
         Create the channels in the empennage as parts
         :return: EmpennageChannels object with ChannelVtail and ChannelX as part types
         """
-        return EmpennageChannels()
+        return EmpennageChannels(pass_down="h_tail, v_tail")
 
     @Part
     def fuselage_channels(self):
@@ -52,7 +43,7 @@ class EWIS(GeomBase):
         :return: ThreeChannels or Fourchannels object with GeomBase.PipeSolids as parts
         """
         return DynamicType(
-            type=ThreeChannels if self.configuration == True else FourChannels
+            type=(ThreeChannels if self.configuration == True else FourChannels), h_tail = self.h_tail
         )
 
 

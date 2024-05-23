@@ -39,8 +39,8 @@ class RiskVolumeAnalysis(GeomBase):
         ),
     )
 
-    @Attribute(label="Find critical release angles")
-    # @action(label='Find critical release angles')
+    #@Attribute(label="Find critical release angles")
+    @action(label='Find critical release angles')
     def evaluate_risk_zones(self):
         orientation_range = np.arange(
             self.start_evaluation,
@@ -88,6 +88,10 @@ class RiskVolumeAnalysis(GeomBase):
 
     @Part
     def risk_volume_instance(self):
+        """
+        Visualize the risk zone for the selected engine stage for the desired release angle
+        :return: RiskVolume object with a LoftedSolid as part
+        """
         return RiskVolume(
             risk_volume_orientation=self.release_angle,
             engines=self.configuration.engines,
@@ -96,6 +100,10 @@ class RiskVolumeAnalysis(GeomBase):
 
     @Part
     def intersected_shapes(self):
+        """
+        Create intersected shapes between the channels and risk_volume_instance to see which channels are hit
+        :return: GeomBase.IntersectedShapes
+        """
         return IntersectedShapes(
             quantify=len(self.channel_shapes),
             shape_in=self.channel_shapes[child.index],
@@ -103,16 +111,12 @@ class RiskVolumeAnalysis(GeomBase):
             # hidden=True,
         )
 
-    # @Part
-    # def test(self):
-    #     return IntersectedShapes(
-    #         shape_in=self.risk_volume_instance.risk_volume_shell,
-    #         tool=self.channel_shapes,
-    #         # hidden=True,
-    #     )
-
     @Attribute
     def intersected_channels(self):
+        """
+        Determine which channels are hit by the risk_volume_instance
+        :return: list of GeomBase.Solids
+        """
         intersected_channels = []
 
         for intersection in self.intersected_shapes:

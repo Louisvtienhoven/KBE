@@ -3,25 +3,35 @@ from parapy.core import *
 
 
 class WingChannels(GeomBase):
-    # The position of the root location of the front spar
-    #: type: generic.positioning.Position
-    front_spar_root_pos = Input()
-
-    # The position of the root location of the aft spar
-    #: type: generic.positioning.Position
-    aft_spar_root_pos = Input()
-
-    # The position of the tip location of the front spar
-    #: type: generic.positioning.Position
-    front_spar_tip_pos = Input()
-
-    # The position of the tip location of the aft spar
-    #: type: generic.positioning.Position
-    aft_spar_tip_pos = Input()
+    wing = Input()
 
     # The spanwise position of the connector between the front and aft spar channels
     #: type: float
     connector_spanwise_position = Input(0.75)
+
+    @Attribute
+    def front_spar_root_pos(self):
+        # The position of the root location of the front spar
+        #: type: generic.positioning.Position
+        return self.wing.front_spar_root_location
+
+    @Attribute
+    def aft_spar_root_pos(self):
+        # The position of the root location of the aft spar
+        #: type: generic.positioning.Position
+        return self.wing.aft_spar_root_location
+
+    @Attribute
+    def front_spar_tip_pos(self):
+        # The position of the tip location of the front spar
+        #: type: generic.positioning.Position
+        return self.wing.front_spar_tip_location
+
+    @Attribute
+    def aft_spar_tip_pos(self):
+        # The position of the tip location of the aft spar
+        #: type: generic.positioning.Position
+        return self.wing.aft_spar_tip_location
 
     @Attribute
     def wing_connector_segment(self):

@@ -40,6 +40,14 @@ class MainAssembly(GeomBase):
         )
 
     @Part
+    def structures(self):
+        """
+        The fuselage, wing and vertical tail models
+        :return: GeomBase.AircraftBody object
+        """
+        return AircraftBody()
+
+    @Part
     def wiring_configuration(self):
         """
         The configuration of the wiring based on [wiring_config]
@@ -47,20 +55,11 @@ class MainAssembly(GeomBase):
         """
         return EWIS(
             configuration=self.wiring_config,
-            front_spar_root_pos=self.structures.right_wing.front_spar_root_location,
-            aft_spar_root_pos=self.structures.right_wing.aft_spar_root_location,
-            front_spar_tip_pos=self.structures.right_wing.front_spar_tip_location,
-            aft_spar_tip_pos=self.structures.right_wing.aft_spar_tip_location,
+            wing=self.structures.right_wing,
+            h_tail=self.configuration.right_h_tail,
+            v_tail=self.structures.v_tail,
             color="blue",
         )
-
-    @Part
-    def structures(self):
-        """
-        The fuselage, wing and vertical tail models
-        :return: GeomBase.AircraftBody object
-        """
-        return AircraftBody()
 
     @Attribute
     def channelShapes(self):

@@ -9,6 +9,21 @@ class ChannelTor(GeomBase):
 
     upper_channels = Input([])
 
+    @Input
+    def angle1(self):
+        dz = abs(self.position.z - self.lower_channel1.position.z)
+        dy = abs(self.position.y - self.lower_channel1.position.y)
+
+        return atan2(dy, dz)
+
+    @Input
+    def angle2(self):
+        dz = abs(self.position.z - self.lower_channel2.position.z)
+        dy = abs(self.position.y - self.lower_channel2.position.y)
+
+        return atan2(dy, dz)
+
+
     @Attribute
     def major_radius(self):
         if len(self.upper_channels) == 1:
@@ -27,21 +42,17 @@ class ChannelTor(GeomBase):
                 [self.upper_channels[0].position.y, self.upper_channels[1].position.y]
             )
             radius = sqrt((self.position.z - z) ** 2 + (self.position.y - y) ** 2)
+
+            def angle(channel):
+                dz = abs(self.position.z - channel.position.z)
+                dy = abs(self.position.y - channel.position.y)
+
+                return atan2(dy, dz)
+
+            self.angle1 = angle(self.upper_channels[0])
+            self.angle2 = angle(self.upper_channels[1])
+
         return radius
-
-    @Attribute
-    def angle1(self):
-        dz = abs(self.position.z - self.lower_channel1.position.z)
-        dy = abs(self.position.y - self.lower_channel1.position.y)
-
-        return atan2(dy, dz)
-
-    @Attribute
-    def angle2(self):
-        dz = abs(self.position.z - self.lower_channel2.position.z)
-        dy = abs(self.position.y - self.lower_channel2.position.y)
-
-        return atan2(dy, dz)
 
     @Part
     def torus(self):

@@ -14,7 +14,7 @@ class FuselageMounted(GeomBase):
     x_pos_engine_fus = Input(32)
 
     @Part
-    def engine(self):
+    def engines(self):
         return Engine(
             quantify=2,
             position=translate(

@@ -10,6 +10,8 @@ class FuselageChannels(GeomBase):
     upper_channel_zposition = Input(1.2)
     channels_ypostion = Input(1.1)
 
+    h_tail = Input()
+
     @Part
     def lower_channel(self):
         return ChannelX(
@@ -55,23 +57,6 @@ class FuselageChannels(GeomBase):
             color="Blue",
         )
 
-    @Part
-    def connectorY2(self):
-        return ChannelY(
-            ch_length=2,
-            ch_radius=0.04,
-            position=translate(
-                self.position,
-                "x",
-                40,
-                "y",
-                -1 * self.channels_ypostion,
-                "z",
-                self.upper_channel_zposition,
-            ),
-            color="Blue",
-        )
-
 
 class ThreeChannels(FuselageChannels):
     @Part
@@ -103,25 +88,22 @@ class ThreeChannels(FuselageChannels):
             ch_length=33.2,
         )
 
+    @Attribute
+    def crv_tail_connector(self):
+        return Arc3P(
+            point1=self.h_tail.aft_spar_root_location.point,
+            point3=self.h_tail.aft_spar_root_location.point.mirror(ref=self.position,
+                                                             axis1=self.position.Vx,
+                                                             axis2=self.position.Vz),
+            point2=self.upper_channel.position.translate('x', self.upper_channel.ch_length).point
+        )
+
+    @Part
+    def tail_connector(self):
+        return PipeSolid(path=self.crv_tail_connector, radius=0.07)
+
 
 class FourChannels(FuselageChannels):
-    @Part
-    def fuselage_connector(self):
-        return ChannelTor(
-            position=translate(self.position, "x", 10, "y", 0, "z", -0.2),
-            lower_channel1=self.lower_channel,
-            lower_channel2=self.lower_channel2,
-            upper_channels=[self.upper_channel],
-        )
-
-    @Part
-    def fuselage_connector2(self):
-        return ChannelTor(
-            position=translate(self.position, "x", 33, "y", 0, "z", -0.2),
-            lower_channel1=self.lower_channel,
-            lower_channel2=self.lower_channel2,
-            upper_channels=[self.upper_channel],
-        )
 
     @Part
     def upper_channel(self):
@@ -151,3 +133,61 @@ class FourChannels(FuselageChannels):
             mesh_deflection=0.0001,
             color="Blue",
         )
+
+    @Attribute
+    def crv_fuselage_connector(self):
+        return Arc2P(
+            start=Point(0, self.upper_channel.position.y, self.upper_channel.position.z),
+            end=Point(0, self.upper_channel2.position.y, self.upper_channel2.position.z),
+            center=self.position.point
+        )
+
+    @Attribute
+    def crv_fuselage_connector2(self):
+        return Arc2P(
+            start=Point(0, self.lower_channel.position.y, self.lower_channel.position.z),
+            end=Point(0, self.upper_channel.position.y, self.upper_channel.position.z),
+            center=translate(self.position, "z", 0.1)
+        )
+
+    @Part
+    def fuselage_connector1(self):
+        return PipeSolid(path=
+                TranslatedCurve(
+                    curve_in=self.crv_fuselage_connector2,
+                    displacement=Vector(10,0,0)
+                ),
+            radius=0.05,
+        )
+
+    @Part
+    def fuselage_connector2(self):
+        return MirroredShape(shape_in=self.fuselage_connector1,
+                             reference_point=self.position,
+                             vector1=self.position.Vx,
+                             vector2=self.position.Vz
+                             )
+
+    @Part
+    def fuselage_connector_ceiling1(self):
+        return PipeSolid(path=
+             TranslatedCurve(
+                 curve_in=self.crv_fuselage_connector,
+                 displacement=Vector(10,0,0)
+             ),
+        radius=0.05
+        )
+
+    @Part
+    def fuselage_connector3(self):
+        return PipeSolid(path=
+            TranslatedCurve(
+                curve_in=self.crv_fuselage_connector2,
+                displacement=Vector(33, 0, 0)
+            ),
+            radius=0.05,
+        )
+
+    # @Part
+    # def tail_connector(self):
+    #     return PipeSolid(path=self.crv_tail_connector, radius=0.07)
