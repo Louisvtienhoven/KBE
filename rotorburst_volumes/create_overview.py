@@ -5,7 +5,7 @@ from rotorburst_volumes.risk_volume import RiskVolume
 
 
 class RotorBurstOverview(GeomBase):
-    critical_angles = Input([])
+    risk_volume_release_angle = Input()
     configuration = Input()
     channel_shapes = Input()
 
@@ -14,34 +14,37 @@ class RotorBurstOverview(GeomBase):
     rotation_direction = Input()
     spread_angle = Input()
 
-    @action
-    def create_overview(self):
-        overview = []
-        for release_angle in self.critical_angles:
-            critical_risk_volume = RiskVolume(
-                risk_volume_orientation=release_angle,
-                engines=self.configuration.engine,
-                rotation_direction=self.rotation_direction,
-                spread_angle=self.spread_angle,
-                engine_index=self.engine_index,
-                engine_stage_index=self.engine_stage_index,
-            )
+    @Part
+    def critical_risk_volume(self):
+        return RiskVolume(
+            risk_volume_orientation=self.risk_volume_release_angle,
+            engines=self.configuration.engines,
+            rotation_direction=self.rotation_direction,
+            spread_angle=self.spread_angle,
+            engine_index=self.engine_index,
+            engine_stage_index=self.engine_stage_index,
+        )
 
-            intersected_shapes = FusedSolid(
-                shape_in=critical_risk_volume.risk_volume_shell,
-                tool=self.channel_shapes,
-            )
+    @Part
+    def intersected_shapes_for_risk_vol_instance(self):
+        return IntersectedShapes(
+                    quantify=len(self.channel_shapes),
+                    shape_in=self.channel_shapes[child.index],
+                    tool=self.risk_volume_instance.risk_volume_shell,
+                    # hidden=True,
+                )
 
-            intersected_channels = []
+    @Attribute
+    def intersected_channels_for_risk_vol_instance(self):
+        intersected_channels_for_risk_vol_instance = []
+        for intersection in self.intersected_shapes_for_risk_vol_instance:
+            if len(intersection.edges) > 0:
+                parent_intersected_channel = intersection.on_face(
+                    intersection.edges[0]
+                ).on_solids[0]
+                intersected_channels_for_risk_vol_instance.append(parent_intersected_channel)
 
-            for intersection in intersected_shapes:
-                if len(intersection.edges) > 0:
-                    parent_intersected_channel = intersection.on_face(
-                        intersection.edges[0]
-                    ).on_solids[0]
-                    intersected_channels.append(parent_intersected_channel)
-            overview.append(intersected_shapes)
-        print(overview)
+        print(intersected_channels_for_risk_vol_instance, 'Check')
 
     # @Attribute
     # def pra_overview(self):

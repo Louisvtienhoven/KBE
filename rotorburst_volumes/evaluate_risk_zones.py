@@ -5,12 +5,15 @@ from parapy.core.widgets import Dropdown
 import tkinter.messagebox as tkmb
 
 import numpy as np
+# import pandas as pd
 
 from rotorburst_volumes.risk_volume import RiskVolume
 from rotorburst_volumes.create_overview import RotorBurstOverview
 
 
 class RiskVolumeAnalysis(GeomBase):
+    wiring_config = Input() #three or four channels
+
     configuration = Input()
     channel_shapes = Input()
 
@@ -32,13 +35,25 @@ class RiskVolumeAnalysis(GeomBase):
     )
 
     # the index of the stage of interest of the engine
+    list_engine_stages = ["Fan", "LP-comp", "HP-comp", "HP-turb", "LP-turb"]
     engine_stage_index = Input(
         0,
         widget=Dropdown(
-            [0, 1, 2, 3, 4], labels=["Fan", "LP-comp", "HP-comp", "HP-turb", "LP-turb"]
+            [0, 1, 2, 3, 4], labels=list_engine_stages
         ),
     )
 
+    @Attribute
+    def intersection_threshold(self):
+        if self.wiring_config == True:
+            threshold = 83
+        elif self.wiring_config == False:
+            threshold = 88
+        return threshold
+
+
+    # TODO: make attribute with button?
+    # TODO: how do I return object from action?
     #@Attribute(label="Find critical release angles")
     @action(label='Find critical release angles')
     def evaluate_risk_zones(self):
@@ -60,7 +75,7 @@ class RiskVolumeAnalysis(GeomBase):
 
             risk_volume_instances = RiskVolume(
                 risk_volume_orientation=orientation_range[idx],
-                engines=self.configuration.engine,
+                engines=self.configuration.engines,
                 rotation_direction=self.rotation_direction,
                 spread_angle=self.spread_angle,
                 engine_index=self.engine_index,
@@ -72,16 +87,11 @@ class RiskVolumeAnalysis(GeomBase):
                 tool=self.channel_shapes,
             )
 
-            if len(intersection.edges) > 53:
-                # TODO: implement on_face method
+            if len(intersection.edges) > self.intersection_threshold:
                 critical_orientation.append(orientation_range[idx])
 
         print("\n critical orientations")
-        print(critical_orientation)
-
-        @Attribute
-        def critical_angles():
-            return critical_orientation
+        print(self.list_engine_stages[self.engine_stage_index],critical_orientation)
 
         tkmb.showinfo("Critical angles", str(critical_orientation))
         return critical_orientation
@@ -110,6 +120,7 @@ class RiskVolumeAnalysis(GeomBase):
             tool=self.risk_volume_instance.risk_volume_shell,
             # hidden=True,
         )
+
 
     @Attribute
     def intersected_channels(self):
@@ -142,7 +153,7 @@ class RiskVolumeAnalysis(GeomBase):
         )  # raises runtime error when no intersection
 
     @Attribute
-    def pra_overview(self):
+    def channels_hit(self):
         channels_hit = self.channel_in_risk_zone.tool
         channels_hit_names = []
         for channel in channels_hit:
@@ -151,9 +162,15 @@ class RiskVolumeAnalysis(GeomBase):
 
         return channels_hit_names
 
-    @Part
-    def overview(self):
-        return RotorBurstOverview(
-            pass_down="configuration, channel_shapes, rotation_direction, spread_angle,engine_index, engine_stage_index",
-            critical_angles=self.evaluate_risk_zones,
-        )
+    @action(label="save critical orientation")
+    def save_orientation(self):
+        import pandas as pd
+        channels = self.channels_hit
+        angles = self.release_angle
+        overview = pd.DataFrame(index = channels, columns = [angles])
+        overview.loc[:,angles] = True
+
+        print(overview)
+
+        overview.to_csv(f'wiring/saved_orientations/{self.engine_stage_index}_{self.engine_index}_{angles}.csv')
+    # TODO: convert pandas to matlab readable format or save as txt?
