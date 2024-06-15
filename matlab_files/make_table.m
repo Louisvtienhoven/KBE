@@ -46,6 +46,7 @@ function overview = compileCSVFiles()
     end
 
 
+
     % Output the compiled table
     overview = compiledData;
 

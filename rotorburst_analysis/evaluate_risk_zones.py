@@ -3,13 +3,9 @@ from parapy.core import *
 from parapy.core.widgets import Dropdown
 
 import tkinter.messagebox as tkmb
-
 import numpy as np
-# import pandas as pd
 
-from rotorburst_volumes.risk_volume import RiskVolume
-from rotorburst_volumes.create_overview import RotorBurstOverview
-
+from rotorburst_analysis.risk_volume import RiskVolume
 
 class RiskVolumeAnalysis(GeomBase):
     wiring_config = Input() #three or four channels
@@ -154,6 +150,10 @@ class RiskVolumeAnalysis(GeomBase):
 
     @Attribute
     def channels_hit(self):
+        """
+        Create a list of the channels which are hit in the displayed orientation
+        :return: list
+        """
         channels_hit = self.channel_in_risk_zone.tool
         channels_hit_names = []
         for channel in channels_hit:
@@ -173,4 +173,3 @@ class RiskVolumeAnalysis(GeomBase):
         print(overview)
 
         overview.to_csv(f'wiring/saved_orientations/{self.engine_stage_index}_{self.engine_index}_{angles}.csv')
-    # TODO: convert pandas to matlab readable format or save as txt?

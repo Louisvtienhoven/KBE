@@ -10,7 +10,7 @@ from fuselage.aircraft_body import AircraftBody
 
 from wiring.EWIS import EWIS
 
-from rotorburst_volumes.evaluate_risk_zones import RiskVolumeAnalysis
+from rotorburst_analysis.evaluate_risk_zones import RiskVolumeAnalysis
 
 import matlab.engine
 MATLAB_ENGINE = matlab.engine.start_matlab()
@@ -94,6 +94,10 @@ class MainAssembly(GeomBase):
     pathchanged = False
     @action(label='create PRA overview')
     def make_table(self):
+        """
+        Create an external overview of the saved critical orientations per engine and per engine stage
+        :return: MatLab uitable
+        """
         if not self.pathchanged:
             # change matlab root directory to Q3D, so it can find the function
             MATLAB_ENGINE.cd(r'./matlab_files')
