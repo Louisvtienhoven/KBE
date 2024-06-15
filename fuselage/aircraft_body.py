@@ -13,9 +13,7 @@ class AircraftBody(GeomBase):
         Visualize the reference frame of the aircraft
         :return: GeomBase.Frame
         """
-        return Frame(
-            pos=self.position
-        )
+        return Frame(pos=self.position)
 
     @Part
     def fuselage(self):
@@ -63,7 +61,7 @@ class AircraftBody(GeomBase):
             w_semi_span=5.87,
             dihedral=0,
             transparency=0.5,
-            dire='./fuselage/whitcomb_tail.dat'
+            dire="./fuselage/whitcomb_tail.dat",
         )
 
 

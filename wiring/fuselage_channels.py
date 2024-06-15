@@ -93,10 +93,12 @@ class ThreeChannels(FuselageChannels):
     def crv_tail_connector(self):
         return Arc3P(
             point1=self.h_tail.aft_spar_root_location.point,
-            point3=self.h_tail.aft_spar_root_location.point.mirror(ref=self.position,
-                                                             axis1=self.position.Vx,
-                                                             axis2=self.position.Vz),
-            point2=self.upper_channel.position.translate('x', self.upper_channel.ch_length).point
+            point3=self.h_tail.aft_spar_root_location.point.mirror(
+                ref=self.position, axis1=self.position.Vx, axis2=self.position.Vz
+            ),
+            point2=self.upper_channel.position.translate(
+                "x", self.upper_channel.ch_length
+            ).point,
         )
 
     @Part
@@ -138,83 +140,87 @@ class FourChannels(FuselageChannels):
     @Attribute
     def crv_fuselage_connector(self):
         return Arc2P(
-            start=Point(0, self.upper_channel.position.y, self.upper_channel.position.z),
-            end=Point(0, self.upper_channel2.position.y, self.upper_channel2.position.z),
-            center=self.position.point
+            start=Point(
+                0, self.upper_channel.position.y, self.upper_channel.position.z
+            ),
+            end=Point(
+                0, self.upper_channel2.position.y, self.upper_channel2.position.z
+            ),
+            center=self.position.point,
         )
 
     @Attribute
     def crv_fuselage_connector2(self):
         return Arc2P(
-            start=Point(0, self.lower_channel.position.y, self.lower_channel.position.z),
+            start=Point(
+                0, self.lower_channel.position.y, self.lower_channel.position.z
+            ),
             end=Point(0, self.upper_channel.position.y, self.upper_channel.position.z),
-            center=translate(self.position, "z", 0.1)
+            center=translate(self.position, "z", 0.1),
         )
 
     @Part
     def fuselage_connector1(self):
-        return PipeSolid(path=
-                TranslatedCurve(
-                    curve_in=self.crv_fuselage_connector2,
-                    displacement=Vector(10,0,0)
-                ),
+        return PipeSolid(
+            path=TranslatedCurve(
+                curve_in=self.crv_fuselage_connector2, displacement=Vector(10, 0, 0)
+            ),
             radius=0.05,
         )
 
     @Part
     def fuselage_connector2(self):
-        return MirroredShape(shape_in=self.fuselage_connector1,
-                             reference_point=self.position,
-                             vector1=self.position.Vx,
-                             vector2=self.position.Vz
-                             )
+        return MirroredShape(
+            shape_in=self.fuselage_connector1,
+            reference_point=self.position,
+            vector1=self.position.Vx,
+            vector2=self.position.Vz,
+        )
 
     @Part
     def fuselage_connector_ceiling1(self):
-        return PipeSolid(path=
-             TranslatedCurve(
-                 curve_in=self.crv_fuselage_connector,
-                 displacement=Vector(10,0,0)
-             ),
-        radius=0.05
+        return PipeSolid(
+            path=TranslatedCurve(
+                curve_in=self.crv_fuselage_connector, displacement=Vector(10, 0, 0)
+            ),
+            radius=0.05,
         )
 
     @Part
     def fuselage_connector3(self):
-        return PipeSolid(path=
-            TranslatedCurve(
-                curve_in=self.crv_fuselage_connector2,
-                displacement=Vector(33, 0, 0)
+        return PipeSolid(
+            path=TranslatedCurve(
+                curve_in=self.crv_fuselage_connector2, displacement=Vector(33, 0, 0)
             ),
             radius=0.05,
         )
 
     @Part
     def fuselage_connector4(self):
-        return MirroredShape(shape_in=self.fuselage_connector3,
-                             reference_point=self.position,
-                             vector1=self.position.Vx,
-                             vector2=self.position.Vz
-                             )
+        return MirroredShape(
+            shape_in=self.fuselage_connector3,
+            reference_point=self.position,
+            vector1=self.position.Vx,
+            vector2=self.position.Vz,
+        )
 
     @Part
     def fuselage_connector_ceiling2(self):
-        return PipeSolid(path=
-             TranslatedCurve(
-                 curve_in=self.crv_fuselage_connector,
-                 displacement=Vector(33,0,0)
-             ),
-        radius=0.05
+        return PipeSolid(
+            path=TranslatedCurve(
+                curve_in=self.crv_fuselage_connector, displacement=Vector(33, 0, 0)
+            ),
+            radius=0.05,
         )
 
     @Attribute
     def crv_tail_connector(self):
         return Arc3P(
             point1=self.h_tail.aft_spar_root_location.point,
-            point3=self.h_tail.aft_spar_root_location.point.mirror(ref=self.position,
-                                                             axis1=self.position.Vx,
-                                                             axis2=self.position.Vz),
-            point2=self.v_tail.aft_spar_root_location.point
+            point3=self.h_tail.aft_spar_root_location.point.mirror(
+                ref=self.position, axis1=self.position.Vx, axis2=self.position.Vz
+            ),
+            point2=self.v_tail.aft_spar_root_location.point,
         )
 
     @Part

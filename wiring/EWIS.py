@@ -17,16 +17,13 @@ class EWIS(GeomBase):
 
     v_tail = Input()
 
-
     @Part
     def wing_channels(self):
         """
         Create the channels in the wing along the front and aft spar and the wing connector as a part
         :return: WingChannels object with GeomBase.PipeSolid as parts
         """
-        return WingChannels(
-            pass_down="wing"
-        )
+        return WingChannels(pass_down="wing")
 
     @Part
     def empennage_channels(self):
@@ -43,7 +40,9 @@ class EWIS(GeomBase):
         :return: ThreeChannels or Fourchannels object with GeomBase.PipeSolids as parts
         """
         return DynamicType(
-            type=(ThreeChannels if self.configuration == True else FourChannels), h_tail = self.h_tail, v_tail = self.v_tail
+            type=(ThreeChannels if self.configuration == True else FourChannels),
+            h_tail=self.h_tail,
+            v_tail=self.v_tail,
         )
 
 

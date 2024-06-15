@@ -15,7 +15,7 @@ class ChannelBase(LoftedSolid):
     ch_length = Input(2.0)
     transparency = 0.6
 
-    axis = 'x'  # Default axis, should be overridden in derived classes
+    axis = "x"  # Default axis, should be overridden in derived classes
 
     @Attribute
     def section_radius(self):
@@ -52,12 +52,12 @@ class ChannelBase(LoftedSolid):
 
 
 class ChannelX(ChannelBase):
-    axis = 'x'
+    axis = "x"
     ch_length = Input(31.5)
 
     @Attribute
     def rotation_axis(self):
-        return 'y'
+        return "y"
 
     @Attribute
     def translation_vector(self):
@@ -65,11 +65,11 @@ class ChannelX(ChannelBase):
 
 
 class ChannelY(ChannelBase):
-    axis = 'y'
+    axis = "y"
 
     @Attribute
     def rotation_axis(self):
-        return 'x'
+        return "x"
 
     @Attribute
     def translation_vector(self):
@@ -77,11 +77,11 @@ class ChannelY(ChannelBase):
 
 
 class ChannelZ(ChannelBase):
-    axis = 'z'
+    axis = "z"
 
     @Attribute
     def rotation_axis(self):
-        return 'z'
+        return "z"
 
     @Attribute
     def translation_vector(self):
@@ -95,7 +95,7 @@ class ChannelSweep(ChannelBase):
 
     @Attribute
     def rotation_axis(self):
-        return 'y'
+        return "y"
 
     @Attribute
     def translation_vector(self):
@@ -109,7 +109,7 @@ class ChannelVtail(ChannelBase):
 
     @Attribute
     def rotation_axis(self):
-        return 'x'
+        return "x"
 
     @Attribute
     def translation_vector(self):

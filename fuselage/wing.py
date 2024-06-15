@@ -1,4 +1,3 @@
-
 from parapy.geom import *
 from parapy.core import *
 from utilities.ref_frame import Frame
@@ -18,18 +17,18 @@ class Wing(LoftedSolid):
 
     front_spar_chord_pos = Input(0.2)
     aft_spar_chord_pos = Input(0.75)
-    dire = Input('./fuselage/whitcomb.dat')
-    dire_main = Input('whitcomb.dat')
+    dire = Input("./fuselage/whitcomb.dat")
+    dire_main = Input("whitcomb.dat")
 
     @Attribute
     def pts(self):
         """Extract airfoil coordinates from a data file and create a list of 3D points"""
         if __name__ != "__main__":
-            #dir = "./fuselage/whitcomb.dat"
+            # dir = "./fuselage/whitcomb.dat"
             dir = self.dire
 
         else:
-            #dir = "./whitcomb.dat"
+            # dir = "./whitcomb.dat"
             dir = self.dire_main
 
         with open(dir, "r") as f:

@@ -4,6 +4,7 @@ from parapy.core import *
 from wiring.channel_definitions import ChannelX, ChannelZ
 from wiring.wing_channels import WingChannels
 
+
 class VTailChannels(GeomBase):
     v_tail = Input()
     connector_spanwise_position = Input()
@@ -16,7 +17,11 @@ class VTailChannels(GeomBase):
         """
         return (
             self.v_tail.front_spar_root_location
-            + (self.v_tail.front_spar_tip_location - self.v_tail.front_spar_root_location) * self.connector_spanwise_position
+            + (
+                self.v_tail.front_spar_tip_location
+                - self.v_tail.front_spar_root_location
+            )
+            * self.connector_spanwise_position
         )
 
     @Attribute
@@ -27,7 +32,8 @@ class VTailChannels(GeomBase):
         """
         return (
             self.v_tail.aft_spar_root_location
-            + (self.v_tail.aft_spar_tip_location - self.v_tail.aft_spar_root_location) * self.connector_spanwise_position
+            + (self.v_tail.aft_spar_tip_location - self.v_tail.aft_spar_root_location)
+            * self.connector_spanwise_position
         )
 
     @Part
@@ -37,26 +43,30 @@ class VTailChannels(GeomBase):
         :return: generic.positioning.Vector
         """
         return PipeSolid(
-            LineSegment(
-                start=self.front_connector_pos, end=self.aft_connector_pos
-            ),
-            radius = 0.07
+            LineSegment(start=self.front_connector_pos, end=self.aft_connector_pos),
+            radius=0.07,
         )
 
     @Part
     def vtail_aftspar(self):
         return PipeSolid(
-            LineSegment(start=self.v_tail.aft_spar_root_location, end=self.v_tail.aft_spar_tip_location),
+            LineSegment(
+                start=self.v_tail.aft_spar_root_location,
+                end=self.v_tail.aft_spar_tip_location,
+            ),
             radius=0.04,
-            color="Blue"
+            color="Blue",
         )
 
     @Part
     def vtail_frontspar(self):
         return PipeSolid(
-            LineSegment(start=self.v_tail.front_spar_root_location, end=self.v_tail.front_spar_tip_location),
+            LineSegment(
+                start=self.v_tail.front_spar_root_location,
+                end=self.v_tail.front_spar_tip_location,
+            ),
             radius=0.04,
-            color="Blue"
+            color="Blue",
         )
 
 
@@ -67,8 +77,7 @@ class EmpennageChannels(GeomBase):
 
     @Part
     def h_tail_channels(self):
-        return WingChannels(wing=self.h_tail,
-                            pass_down="connector_spanwise_position")
+        return WingChannels(wing=self.h_tail, pass_down="connector_spanwise_position")
 
     @Part
     def v_tail_channels(self):

@@ -7,8 +7,9 @@ import numpy as np
 
 from rotorburst_analysis.risk_volume import RiskVolume
 
+
 class RiskVolumeAnalysis(GeomBase):
-    wiring_config = Input() #three or four channels
+    wiring_config = Input()  # three or four channels
 
     configuration = Input()
     channel_shapes = Input()
@@ -34,9 +35,7 @@ class RiskVolumeAnalysis(GeomBase):
     list_engine_stages = ["Fan", "LP-comp", "HP-comp", "HP-turb", "LP-turb"]
     engine_stage_index = Input(
         0,
-        widget=Dropdown(
-            [0, 1, 2, 3, 4], labels=list_engine_stages
-        ),
+        widget=Dropdown([0, 1, 2, 3, 4], labels=list_engine_stages),
     )
 
     @Attribute
@@ -47,11 +46,10 @@ class RiskVolumeAnalysis(GeomBase):
             threshold = 88
         return threshold
 
-
     # TODO: make attribute with button?
     # TODO: how do I return object from action?
-    #@Attribute(label="Find critical release angles")
-    @action(label='Find critical release angles')
+    # @Attribute(label="Find critical release angles")
+    @action(label="Find critical release angles")
     def evaluate_risk_zones(self):
         orientation_range = np.arange(
             self.start_evaluation,
@@ -87,7 +85,7 @@ class RiskVolumeAnalysis(GeomBase):
                 critical_orientation.append(orientation_range[idx])
 
         print("\n critical orientations")
-        print(self.list_engine_stages[self.engine_stage_index],critical_orientation)
+        print(self.list_engine_stages[self.engine_stage_index], critical_orientation)
 
         tkmb.showinfo("Critical angles", str(critical_orientation))
         return critical_orientation
@@ -116,7 +114,6 @@ class RiskVolumeAnalysis(GeomBase):
             tool=self.risk_volume_instance.risk_volume_shell,
             # hidden=True,
         )
-
 
     @Attribute
     def intersected_channels(self):
@@ -165,11 +162,14 @@ class RiskVolumeAnalysis(GeomBase):
     @action(label="save critical orientation")
     def save_orientation(self):
         import pandas as pd
+
         channels = self.channels_hit
         angles = self.release_angle
-        overview = pd.DataFrame(index = channels, columns = [angles])
-        overview.loc[:,angles] = True
+        overview = pd.DataFrame(index=channels, columns=[angles])
+        overview.loc[:, angles] = True
 
         print(overview)
 
-        overview.to_csv(f'wiring/saved_orientations/{self.engine_stage_index}_{self.engine_index}_{angles}.csv')
+        overview.to_csv(
+            f"wiring/saved_orientations/{self.engine_stage_index}_{self.engine_index}_{angles}.csv"
+        )

@@ -2,9 +2,7 @@ from parapy.geom import *
 from parapy.core import *
 
 
-class Fuselage(
-    LoftedShell
-):  #"""Fuselage geometry, a loft through circles."""
+class Fuselage(LoftedShell):  # """Fuselage geometry, a loft through circles."""
 
     # fuselage radius
     fu_radius = Input(3.95 / 2)

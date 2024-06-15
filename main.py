@@ -13,6 +13,7 @@ from wiring.EWIS import EWIS
 from rotorburst_analysis.evaluate_risk_zones import RiskVolumeAnalysis
 
 import matlab.engine
+
 MATLAB_ENGINE = matlab.engine.start_matlab()
 
 
@@ -88,11 +89,13 @@ class MainAssembly(GeomBase):
         can be visualised.
         :return: RiskVolumeAnalysis object with RiskVolume.LoftedSolid and GeomBase.FusedSolid as parts
         """
-        return RiskVolumeAnalysis(pass_down="configuration, wiring_config",
-                                  channel_shapes=self.channelShapes)
+        return RiskVolumeAnalysis(
+            pass_down="configuration, wiring_config", channel_shapes=self.channelShapes
+        )
 
     pathchanged = False
-    @action(label='create PRA overview')
+
+    @action(label="create PRA overview")
     def make_table(self):
         """
         Create an external overview of the saved critical orientations per engine and per engine stage
@@ -100,8 +103,8 @@ class MainAssembly(GeomBase):
         """
         if not self.pathchanged:
             # change matlab root directory to Q3D, so it can find the function
-            MATLAB_ENGINE.cd(r'./matlab_files')
-            self.pathchanged=True
+            MATLAB_ENGINE.cd(r"./matlab_files")
+            self.pathchanged = True
 
         return MATLAB_ENGINE.make_table()
 

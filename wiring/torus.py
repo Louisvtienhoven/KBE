@@ -23,7 +23,6 @@ class ChannelTor(GeomBase):
 
         return atan2(dy, dz)
 
-
     @Attribute
     def major_radius(self):
         if len(self.upper_channels) == 1:
