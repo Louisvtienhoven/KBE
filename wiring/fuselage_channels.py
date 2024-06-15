@@ -8,7 +8,7 @@ from wiring.torus import ChannelTor
 class FuselageChannels(GeomBase):
     lower_channel_zposition = Input(-1)
     upper_channel_zposition = Input(1.2)
-    channels_ypostion = Input(1.1)
+    channels_ypostion = Input(1.05)
 
     h_tail = Input()
     v_tail = Input()
@@ -20,7 +20,7 @@ class FuselageChannels(GeomBase):
             position=translate(
                 self.position,
                 "x",
-                5,
+                5.5,
                 "y",
                 self.channels_ypostion,
                 "z",
@@ -109,18 +109,18 @@ class FourChannels(FuselageChannels):
     @Part
     def upper_channel(self):
         return ChannelX(
-            ch_radius=0.1,
+            ch_radius=0.07,
             position=translate(
                 self.position,
                 "x",
-                5,
+                8,
                 "y",
                 self.channels_ypostion,
                 "z",
                 self.upper_channel_zposition,
             ),
             color="Blue",
-            ch_length=32,
+            ch_length=29,
         )
 
     @Part
