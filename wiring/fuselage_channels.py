@@ -61,6 +61,7 @@ class FuselageChannels(GeomBase):
         )
 
 
+
 class ThreeChannels(FuselageChannels):
     @Part
     def fuselage_connector(self):
@@ -74,7 +75,7 @@ class ThreeChannels(FuselageChannels):
     @Part
     def fuselage_connector2(self):
         return ChannelTor(
-            position=translate(self.position, "x", 33, "y", 0, "z", -0.2),
+            position=translate(self.position, "x", self.v_tail.front_spar_root_location.point.x, "y", 0, "z", -0.2),
             lower_channel1=self.lower_channel,
             lower_channel2=self.lower_channel2,
             upper_channels=[self.upper_channel],
@@ -168,7 +169,6 @@ class FourChannels(FuselageChannels):
                 curve_in=self.crv_fuselage_connector2, displacement=Vector(10, 0, 0)
             ),
             radius=0.05,
-            hidden=self.tail_config
         )
 
     @Part
@@ -193,7 +193,8 @@ class FourChannels(FuselageChannels):
     def fuselage_connector3(self):
         return PipeSolid(
             path=TranslatedCurve(
-                curve_in=self.crv_fuselage_connector2, displacement=Vector(33, 0, 0)
+                curve_in=self.crv_fuselage_connector2,
+                displacement=Vector(self.v_tail.front_spar_root_location.point.x-5, 0, 0)
             ),
             radius=0.05,
         )
@@ -211,7 +212,8 @@ class FourChannels(FuselageChannels):
     def fuselage_connector_ceiling2(self):
         return PipeSolid(
             path=TranslatedCurve(
-                curve_in=self.crv_fuselage_connector, displacement=Vector(33, 0, 0)
+                curve_in=self.crv_fuselage_connector,
+                displacement=Vector(self.v_tail.front_spar_root_location.point.x-5, 0, 0)
             ),
             radius=0.05,
         )
@@ -228,4 +230,38 @@ class FourChannels(FuselageChannels):
 
     @Part
     def tail_connector(self):
-        return PipeSolid(path=self.crv_tail_connector, radius=0.07)
+        return PipeSolid(path=self.crv_tail_connector, radius=0.07, hidden=self.tail_config)
+
+    @Attribute
+    def crv_vtail_connector(self):
+        point1 = Point(x=self.v_tail.front_spar_root_location.point.x,
+                       y=self.upper_channel.position.y,
+                       z=self.upper_channel.position.z)
+
+        point2 = Point(x=self.v_tail.front_spar_root_location.point.x,
+                       y=self.upper_channel2.position.y,
+                       z=self.upper_channel2.position.z)
+
+        return LineSegment(start=point2, end=point1)
+
+    @Part
+    def vtail_connector(self):
+        return PipeSolid(path=self.crv_vtail_connector, radius=0.07)
+
+    @Attribute
+    def crv_vtail_connector_top(self):
+        point1 = self.v_tail.aft_spar_root_location
+        point2 = translate(self.upper_channel.position, 'x', self.upper_channel.ch_length)
+        return LineSegment(start=point1, end=point2)
+
+    @Part
+    def vtail_connector_top1(self):
+        return PipeSolid(path=self.crv_vtail_connector_top, radius=0.07)
+
+    @Part
+    def vtail_connector_top2(self):
+        return MirroredShape(shape_in=self.vtail_connector_top1,
+                             reference_point=self.position,
+                             vector1=self.position.Vx,
+                             vector2=self.position.Vz,
+                             )

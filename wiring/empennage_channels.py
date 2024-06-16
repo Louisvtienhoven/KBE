@@ -1,7 +1,6 @@
 from parapy.geom import *
 from parapy.core import *
 
-from wiring.channel_definitions import ChannelX, ChannelZ
 from wiring.wing_channels import WingChannels
 
 

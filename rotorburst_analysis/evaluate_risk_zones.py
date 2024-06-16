@@ -14,9 +14,13 @@ MATLAB_ENGINE = matlab.engine.start_matlab()
 class RiskVolumeAnalysis(GeomBase):
     wiring_config = Input()  # three or four channels
 
+    # The tail configuration of the aircraft
     configuration = Input()
+
+    # A sequence of Shape objects
     channel_shapes = Input()
 
+    # float specifying the release angle of the fragment in degrees
     release_angle = Input(0.0)
 
     granularity = Input(5, label="Steps in angle for PRA")
@@ -44,17 +48,32 @@ class RiskVolumeAnalysis(GeomBase):
 
     @Attribute
     def intersection_threshold(self):
-        if self.wiring_config == True:
-            threshold = 83
-        elif self.wiring_config == False:
-            threshold = 88
+        """
+        Based on the wiring configuration, there is a standard number of intersecting shapes of the
+        channels themselves.
+        :return: int
+        """
+        if self.wiring_config == True: # three channels
+            if self.configuration == True: # Wing mounted
+                threshold = 73
+            else: # Fuselage mounted
+                threshold = 61
+
+        elif self.wiring_config == False: # four channels
+            if self.configuration == True: # Wing mounted
+                threshold = 128
+            else: # Fuselage mounted
+                threshold = 110
+
+
         return threshold
 
-    # TODO: make attribute with button?
-    # TODO: how do I return object from action?
-    # @Attribute(label="Find critical release angles")
     @action(label="Find critical release angles")
     def evaluate_risk_zones(self):
+        """
+        Loop over all angles between [self.start_evaluation] and [self.end_evaluation]
+        :return: list of release angles that result in a channel being hit
+        """
         orientation_range = np.arange(
             self.start_evaluation,
             self.end_evaluation + self.granularity,
@@ -93,6 +112,12 @@ class RiskVolumeAnalysis(GeomBase):
 
         tkmb.showinfo("Critical angles", str(critical_orientation))
         return critical_orientation
+
+    @Part
+    def threshold(self):
+        return IntersectedShapes(shape_in=self.risk_volume_instance.risk_volume_shell, tool=self.channel_shapes,
+                                 hidden=True
+                                 )
 
     @Part
     def risk_volume_instance(self):
@@ -165,6 +190,10 @@ class RiskVolumeAnalysis(GeomBase):
 
     @action(label="save critical orientation")
     def save_orientation(self):
+        """
+        Save the critical orientation that is being visualised in the GUI based on the engine stage.
+        :return: pandas.DataFrame
+        """
         import pandas as pd
 
         channels = self.channels_hit

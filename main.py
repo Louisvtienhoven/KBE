@@ -87,7 +87,7 @@ class MainAssembly(GeomBase):
             pass_down="configuration, wiring_config", channel_shapes=self.channelShapes
         )
 
-    @action(label="Write to step file")
+    @Part(label="Write to step file")
     def step_writer(self):
         """
         Module to write geometry to a .stp file
@@ -96,7 +96,12 @@ class MainAssembly(GeomBase):
         return STEPWriter(
             nodes=[
                 self.configuration.engines[0].nacelle.srf_nacelle,
-                self.configuration.engines[0].shaft.stages_disks,
+                self.configuration.engines[0].shaft.stages_disks[0],
+                self.configuration.engines[0].shaft.stages_disks[1],
+                self.configuration.engines[0].shaft.stages_disks[2],
+                self.configuration.engines[0].shaft.stages_disks[3],
+                self.configuration.engines[0].shaft.stages_disks[4],
+                self.pra_rotor_burst.risk_volume_instance.risk_volume_shell
             ],
             filename="engine.step",
         )
