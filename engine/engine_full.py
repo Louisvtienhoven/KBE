@@ -1,17 +1,4 @@
 # -*- coding: utf-8 -*-
-#
-# Copyright (C) 2016-2023 ParaPy Holding B.V.
-#
-# You may use the contents of this file in your application code.
-#
-# THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
-# KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-# IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR
-# PURPOSE.
-
-"""
-Model blades initially as ruled surfaces
-"""
 
 from parapy.geom import *
 from parapy.core import *

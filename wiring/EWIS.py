@@ -17,6 +17,8 @@ class EWIS(GeomBase):
 
     v_tail = Input()
 
+    tail_config = Input()
+
     @Part
     def wing_channels(self):
         """
@@ -43,6 +45,7 @@ class EWIS(GeomBase):
             type=(ThreeChannels if self.configuration == True else FourChannels),
             h_tail=self.h_tail,
             v_tail=self.v_tail,
+            tail_config=self.tail_config
         )
 
 

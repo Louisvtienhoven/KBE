@@ -5,16 +5,9 @@ from parapy.exchange import STEPWriter
 
 from assembly.config_t_tail import FuselageMounted
 from assembly.config_conv import WingMounted
-
 from fuselage.aircraft_body import AircraftBody
-
 from wiring.EWIS import EWIS
-
 from rotorburst_analysis.evaluate_risk_zones import RiskVolumeAnalysis
-
-import matlab.engine
-
-MATLAB_ENGINE = matlab.engine.start_matlab()
 
 
 class MainAssembly(GeomBase):
@@ -59,6 +52,7 @@ class MainAssembly(GeomBase):
             wing=self.structures.right_wing,
             h_tail=self.configuration.right_h_tail,
             v_tail=self.structures.v_tail,
+            tail_config=(not self.aircraft_config),
             color="blue",
         )
 
@@ -92,21 +86,6 @@ class MainAssembly(GeomBase):
         return RiskVolumeAnalysis(
             pass_down="configuration, wiring_config", channel_shapes=self.channelShapes
         )
-
-    # pathchanged = False
-    #
-    # @action(label="create PRA overview")
-    # def make_table(self):
-    #     """
-    #     Create an external overview of the saved critical orientations per engine and per engine stage
-    #     :return: MatLab uitable
-    #     """
-    #     if not self.pathchanged:
-    #         # change matlab root directory to Q3D, so it can find the function
-    #         MATLAB_ENGINE.cd(r"./matlab_files")
-    #         self.pathchanged = True
-    #
-    #     return MATLAB_ENGINE.make_table()
 
     @action(label="Write to step file")
     def step_writer(self):

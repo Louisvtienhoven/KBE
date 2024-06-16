@@ -13,6 +13,8 @@ class FuselageChannels(GeomBase):
     h_tail = Input()
     v_tail = Input()
 
+    tail_config = Input()
+
     @Part
     def lower_channel(self):
         return ChannelX(
@@ -103,7 +105,7 @@ class ThreeChannels(FuselageChannels):
 
     @Part
     def tail_connector(self):
-        return PipeSolid(path=self.crv_tail_connector, radius=0.07)
+        return PipeSolid(path=self.crv_tail_connector, radius=0.07, hidden=self.tail_config)
 
 
 class FourChannels(FuselageChannels):
@@ -166,6 +168,7 @@ class FourChannels(FuselageChannels):
                 curve_in=self.crv_fuselage_connector2, displacement=Vector(10, 0, 0)
             ),
             radius=0.05,
+            hidden=self.tail_config
         )
 
     @Part
