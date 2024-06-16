@@ -93,20 +93,20 @@ class MainAssembly(GeomBase):
             pass_down="configuration, wiring_config", channel_shapes=self.channelShapes
         )
 
-    pathchanged = False
-
-    @action(label="create PRA overview")
-    def make_table(self):
-        """
-        Create an external overview of the saved critical orientations per engine and per engine stage
-        :return: MatLab uitable
-        """
-        if not self.pathchanged:
-            # change matlab root directory to Q3D, so it can find the function
-            MATLAB_ENGINE.cd(r"./matlab_files")
-            self.pathchanged = True
-
-        return MATLAB_ENGINE.make_table()
+    # pathchanged = False
+    #
+    # @action(label="create PRA overview")
+    # def make_table(self):
+    #     """
+    #     Create an external overview of the saved critical orientations per engine and per engine stage
+    #     :return: MatLab uitable
+    #     """
+    #     if not self.pathchanged:
+    #         # change matlab root directory to Q3D, so it can find the function
+    #         MATLAB_ENGINE.cd(r"./matlab_files")
+    #         self.pathchanged = True
+    #
+    #     return MATLAB_ENGINE.make_table()
 
     @action(label="Write to step file")
     def step_writer(self):

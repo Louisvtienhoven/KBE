@@ -7,6 +7,9 @@ import numpy as np
 
 from rotorburst_analysis.risk_volume import RiskVolume
 
+import matlab.engine
+MATLAB_ENGINE = matlab.engine.start_matlab()
+
 
 class RiskVolumeAnalysis(GeomBase):
     wiring_config = Input()  # three or four channels
@@ -27,8 +30,9 @@ class RiskVolumeAnalysis(GeomBase):
     spread_angle = Input(5.0)
 
     # the index of the engine of interest, either "Left" (0) or "Right" (0)
+    list_engine_sides = ["Left", "Right"]
     engine_index = Input(
-        0, widget=Dropdown([0, 1], labels=["Left", "Right"], autocompute=True)
+        0, widget=Dropdown([0, 1], labels=list_engine_sides, autocompute=True)
     )
 
     # the index of the stage of interest of the engine
@@ -171,5 +175,22 @@ class RiskVolumeAnalysis(GeomBase):
         print(overview)
 
         overview.to_csv(
-            f"wiring/saved_orientations/{self.engine_stage_index}_{self.engine_index}_{angles}.csv"
+            f"wiring/saved_orientations/{self.list_engine_sides[self.engine_index]}/{self.list_engine_stages[self.engine_stage_index]}/{self.engine_stage_index}_{self.engine_index}_{angles}.csv"
         )
+
+    pathchanged = False
+
+    @action(label="create PRA overview")
+    def make_table(self):
+        """
+        Create an external overview of the saved critical orientations per engine and per engine stage
+        :return: MatLab uitable
+        """
+        dir = f'../wiring/saved_orientations/{self.list_engine_sides[self.engine_index]}/{self.list_engine_stages[self.engine_stage_index]}'
+
+        if not self.pathchanged:
+            # change matlab root directory to Q3D, so it can find the function
+            MATLAB_ENGINE.cd(r"./matlab_files")
+            self.pathchanged = True
+
+        return MATLAB_ENGINE.make_table(dir)
