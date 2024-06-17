@@ -101,7 +101,7 @@ class MainAssembly(GeomBase):
                 self.configuration.engines[0].shaft.stages_disks[2],
                 self.configuration.engines[0].shaft.stages_disks[3],
                 self.configuration.engines[0].shaft.stages_disks[4],
-                self.pra_rotor_burst.risk_volume_instance.risk_volume_shell
+                self.pra_rotor_burst.risk_volume_instance.risk_volume_shell,
             ],
             filename="engine.step",
         )

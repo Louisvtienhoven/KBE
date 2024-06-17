@@ -103,6 +103,7 @@ class FuselageMounted(GeomBase):
             transparency=0.5,
         )
 
+
 if __name__ == "__main__":
     from parapy.gui import display
 

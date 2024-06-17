@@ -3,7 +3,6 @@ from parapy.core import *
 
 
 class Fuselage(LoftedShell):  # """Fuselage geometry, a loft through circles."""
-
     # fuselage radius
     fu_radius = Input(3.95 / 2)
 

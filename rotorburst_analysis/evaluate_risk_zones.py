@@ -8,6 +8,7 @@ import numpy as np
 from rotorburst_analysis.risk_volume import RiskVolume
 
 import matlab.engine
+
 MATLAB_ENGINE = matlab.engine.start_matlab()
 
 
@@ -53,18 +54,17 @@ class RiskVolumeAnalysis(GeomBase):
         channels themselves.
         :return: int
         """
-        if self.wiring_config == True: # three channels
-            if self.configuration == True: # Wing mounted
+        if self.wiring_config == True:  # three channels
+            if self.configuration == True:  # Wing mounted
                 threshold = 73
-            else: # Fuselage mounted
+            else:  # Fuselage mounted
                 threshold = 61
 
-        elif self.wiring_config == False: # four channels
-            if self.configuration == True: # Wing mounted
+        elif self.wiring_config == False:  # four channels
+            if self.configuration == True:  # Wing mounted
                 threshold = 128
-            else: # Fuselage mounted
+            else:  # Fuselage mounted
                 threshold = 110
-
 
         return threshold
 
@@ -115,9 +115,11 @@ class RiskVolumeAnalysis(GeomBase):
 
     @Part
     def threshold(self):
-        return IntersectedShapes(shape_in=self.risk_volume_instance.risk_volume_shell, tool=self.channel_shapes,
-                                 hidden=True
-                                 )
+        return IntersectedShapes(
+            shape_in=self.risk_volume_instance.risk_volume_shell,
+            tool=self.channel_shapes,
+            hidden=True,
+        )
 
     @Part
     def risk_volume_instance(self):
@@ -215,7 +217,7 @@ class RiskVolumeAnalysis(GeomBase):
         Create an external overview of the saved critical orientations per engine and per engine stage
         :return: MatLab uitable
         """
-        dir = f'../wiring/saved_orientations/{self.list_engine_sides[self.engine_index]}/{self.list_engine_stages[self.engine_stage_index]}'
+        dir = f"../wiring/saved_orientations/{self.list_engine_sides[self.engine_index]}/{self.list_engine_stages[self.engine_stage_index]}"
 
         if not self.pathchanged:
             # change matlab root directory to Q3D, so it can find the function

@@ -23,7 +23,6 @@ class RiskVolume(GeomBase):
     # the index of the stage of interest of the engine
     engine_stage_index = Input()  #
 
-
     @Attribute
     def engine_stage(self):
         """
