@@ -52,6 +52,9 @@ class ChannelBase(LoftedSolid):
 
 
 class ChannelX(ChannelBase):
+    """
+    Standard definition of a channel aligned with the x-axis
+    """
     axis = "x"
     ch_length = Input(31.5)
 
@@ -65,6 +68,9 @@ class ChannelX(ChannelBase):
 
 
 class ChannelY(ChannelBase):
+    """
+    Standard definition of a channel aligned with the y-axis
+    """
     axis = "y"
 
     @Attribute

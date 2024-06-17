@@ -38,8 +38,8 @@ class VTailChannels(GeomBase):
     @Part
     def connector(self):
         """
-        Create a vector between the front and aft position of the wing connector
-        :return: generic.positioning.Vector
+        Create a connector as pipesolid between the front and aft position of the connector
+        :return: GeomBase.PipeSolid
         """
         return PipeSolid(
             LineSegment(start=self.front_connector_pos, end=self.aft_connector_pos),
@@ -48,6 +48,10 @@ class VTailChannels(GeomBase):
 
     @Part
     def vtail_aftspar(self):
+        """
+        Create a channel as pipesolid along the aft spar of the vertical tail
+        :return: GeomBase.PipeSolid
+        """
         return PipeSolid(
             LineSegment(
                 start=self.v_tail.aft_spar_root_location,
@@ -59,6 +63,10 @@ class VTailChannels(GeomBase):
 
     @Part
     def vtail_frontspar(self):
+        """
+        Create a channel as pipesolid along the front spar of the vertical tail
+        :return: GeomBase.PipeSolid
+        """
         return PipeSolid(
             LineSegment(
                 start=self.v_tail.front_spar_root_location,
@@ -76,8 +84,16 @@ class EmpennageChannels(GeomBase):
 
     @Part
     def h_tail_channels(self):
+        """
+        Create the channels in the horizontal tail plane based on the WingChannels class
+        :return: WingChannels object
+        """
         return WingChannels(wing=self.h_tail, pass_down="connector_spanwise_position")
 
     @Part
     def v_tail_channels(self):
+        """
+        Create the channels in the vertical tail plane based on the VTailChannels class
+        :return: VTailChannels object
+        """
         return VTailChannels(pass_down="connector_spanwise_position, v_tail")
