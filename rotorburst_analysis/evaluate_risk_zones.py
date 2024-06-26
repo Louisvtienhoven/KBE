@@ -55,13 +55,13 @@ class RiskVolumeAnalysis(GeomBase):
         :return: int
         """
         if self.wiring_config == True:  # three channels
-            if self.configuration == True:  # Wing mounted
+            if self.configuration.__class__.__name__ == "WingMounted":  # Wing mounted
                 threshold = 73
             else:  # Fuselage mounted
                 threshold = 61
 
         elif self.wiring_config == False:  # four channels
-            if self.configuration == True:  # Wing mounted
+            if self.configuration.__class__.__name__ == "WingMounted":  # Wing mounted
                 threshold = 128
             else:  # Fuselage mounted
                 threshold = 110
@@ -118,7 +118,7 @@ class RiskVolumeAnalysis(GeomBase):
         return IntersectedShapes(
             shape_in=self.risk_volume_instance.risk_volume_shell,
             tool=self.channel_shapes,
-            hidden=True,
+            hidden=False,
         )
 
     @Part
